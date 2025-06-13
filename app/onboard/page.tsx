@@ -1,30 +1,33 @@
 "use client"
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { faqs, routes } from "../constants";
-import { apiCall } from "@/utils/helper";
-import { ClipLoader } from "react-spinners";
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<null | number>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const router = useRouter()
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
 
-  const handleTrial = async () => {
-    setIsLoading(true);
-    if (!email || email === "") router.push(routes.ACCOUNTS)
-    
-    const result = await apiCall("", "")
-  }
+  const faqs = [
+    {
+      question: "What is included in the trial?",
+      answer:
+        "Your trial includes full access to all Rafiki features—no limitations—so you can fully explore our platform before committing."
+    },
+    {
+      question: "Can I cancel anytime?",
+      answer:
+        "Yes. Rafiki operates with flexibility in mind. Cancel anytime from your dashboard without penalties."
+    },
+    {
+      question: "Is Rafiki compliant with legal practice standards?",
+      answer:
+        "Absolutely. Rafiki is built to align with industry best practices, data privacy requirements, and professional obligations of lawyers."
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-t from-white to-gray-700 text-gray-900">
+    <div className="min-h-screen bg-gradient-to-t from-white to-gray-800 text-gray-900">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-6 py-24 text-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-6">Rafiki</h1>
@@ -42,18 +45,15 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-3 max-w-2xl mx-auto mb-6">
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email address"
             className="w-full sm:w-2/3 px-4 py-3 rounded-md border border-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500"
           />
-          <button
-            onClick={handleTrial}
-            disabled={isLoading}
-            className={`bg-gray-700 hover:bg-gray-800 text-white font-semibold px-6 py-3 rounded shadow transition ${isLoading ? 'cursor-disabled' : 'cursor-pointer'}`}
+          <a
+            href="#features"
+            className="bg-gray-700 hover:bg-gray-800 text-white font-semibold px-6 py-3 rounded shadow transition"
           >
-            {isLoading ? (<ClipLoader loading={isLoading} color="white" size={10}/>) : "Start Free Trial"}
-          </button>
+            Start Free Trial
+          </a>
         </div>
 
         <p className="text-sm text-gray-900 max-w-xl mx-auto">
@@ -72,7 +72,7 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-12">
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">📄 Legal Services Catalog</h3>
-              <p className="text-gray-700">List, price, and manage your legal services like a professional storefront.</p>
+              <p className="text-gray-700">List, price, and promote your legal services like a professional storefront.</p>
             </div>
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">💳 Retainer & Payment Support</h3>
@@ -80,7 +80,7 @@ export default function Home() {
             </div>
             <div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">📅 Client Intake & Scheduling</h3>
-              <p className="text-gray-700">Let clients book you 24/7. Reduce no-shows, increase revenue, and stay in control.</p>
+              <p className="text-gray-700">Let clients request, book, and manage appointments with ease and confidence.</p>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function Home() {
               <div key={index} className="border-b pb-4">
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full text-left flex justify-between items-center text-lg font-medium text-gray-800 focus:outline-none cursor-pointer"
+                  className="w-full text-left flex justify-between items-center text-lg font-medium text-gray-800 focus:outline-none"
                 >
                   {faq.question}
                   <span className="text-2xl ml-2">{openFAQ === index ? "−" : "+"}</span>
@@ -114,14 +114,14 @@ export default function Home() {
       </div>
 
       {/* Footer Section */}
-      <footer className="bg-gradient-to-b from-transparent to-gray-300 text-gray-300 py-10">
+      <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-gray-300 py-10">
         <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-sm text-gray-700">© {new Date().getFullYear()} Rafiki. All rights reserved.</p>
-          <p className="mt-2 text-sm text-gray-700">Built with care for legal professionals worldwide.</p>
+          <p className="text-sm">© {new Date().getFullYear()} Rafiki. All rights reserved.</p>
+          <p className="mt-2 text-sm">Built with care for legal professionals worldwide.</p>
           <div className="mt-4 space-x-4">
-            <Link href="#" className="text-sm hover:underline text-gray-700 cursor-pointer">Privacy Policy</Link>
-            <Link href="#" className="text-sm hover:underline text-gray-700 cursor-pointer">Terms of Service</Link>
-            <Link href="#" className="text-sm hover:underline text-gray-700 cursor-pointer">Contact Us</Link>
+            <a href="#" className="text-sm hover:underline">Privacy Policy</a>
+            <a href="#" className="text-sm hover:underline">Terms of Service</a>
+            <a href="#" className="text-sm hover:underline">Contact Us</a>
           </div>
         </div>
       </footer>
