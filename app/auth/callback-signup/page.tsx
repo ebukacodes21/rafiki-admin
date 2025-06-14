@@ -24,7 +24,6 @@ const page = () => {
           setStatusMessage(formatError(result));
           return;
         }
-
         router.push(routes.DASHBOARD);
       })
       .catch((error) => {

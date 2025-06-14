@@ -5,7 +5,10 @@ export const routes = {
   VERIFY: "/auth/verify",
   RESET: "/auth/reset",
   FORGOT: "/auth/forgot",
+  CALLBACK_SIGNUP: "/auth/callback-signup",
+  CALLBACK_SIGNIN: "/auth/callback-signin",
 
+  ONBOARD: "/onboard",
   HOME: "/",
   ABOUT: "/pages/about",
   PARTNER: "/pages/partner",

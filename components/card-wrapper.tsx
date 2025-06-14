@@ -52,7 +52,7 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
             <CardContent>{children}</CardContent>
 
             <CardFooter>
-              <BackButton label={backButtonLabel} href={backButtonHref} />
+              <BackButton label={backButtonLabel} href={backButtonHref!} />
             </CardFooter>
           </Card>
         </div>

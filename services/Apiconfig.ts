@@ -9,6 +9,7 @@ const ApiConfig = {
     loginGoogle: `${api_base_url}/admin/login-google`,
     forgot: `${api_base_url}/admin/forgot`,
     reset: `${api_base_url}/admin/reset`,
+    onboard: `${api_base_url}/admin/onboard`,
 }
 
 export default ApiConfig;

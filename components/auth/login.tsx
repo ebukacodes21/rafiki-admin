@@ -80,7 +80,7 @@ export const LoginForm = () => {
         return;
       }
 
-      console.log(result)
+      if (!result.admin.isOnboarded) router.push(routes.ONBOARD)
       router.push(routes.DASHBOARD);
     } catch (err) {
       toast.error(formatError(err));
@@ -89,7 +89,6 @@ export const LoginForm = () => {
     }
   };
 
-  // Auto-check if email is present in the URL
   useEffect(() => {
     if (initialEmail) {
       handleContinue();
