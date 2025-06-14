@@ -1,65 +1,100 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CardWrapper } from "@/components/card-wrapper";
-import { routes, countryList } from "@/constants";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/constants";
+import { apiCall, formatError } from "@/utils/helper";
 import { ClipLoader } from "react-spinners";
-import { BsEyeSlash, BsEye } from "react-icons/bs";
-import { apiCall, fileUploader, formatError } from "@/utils/helper";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { FaCamera } from "react-icons/fa";
-import axios from "axios";
-import { BackButton } from "../back-button";
-import { LoginSchema } from "@/schema";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
+import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
+import Link from "next/link";
 
 export const LoginForm = () => {
-  const [isHidden, setIsHidden] = useState<boolean>(true);
-  const [loading, setIsLoading] = useState<boolean>(false);
-  const [isFileLoading, setIsFileLoading] = useState<boolean>(false);
-  const [file, setFile] = useState<FileList | undefined>();
-  const [imgUrl, setImgUrl] = useState<string>("");
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+  const searchParams = useSearchParams();
+  const initialEmail = searchParams.get("email") || "";
+
+  const [email, setEmail] = useState(initialEmail);
+  const [password, setPassword] = useState("");
+  const [accountExists, setAccountExists] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [isHidden, setIsHidden] = useState(true);
+
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const handleGoogleLogin = () => {
+    setGoogleLoading(true);
+    const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+    const REDIRECT_URI = "http://localhost:3000/auth/callback-signin";
+    const NONCE = uuidv4();
 
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    setIsLoading(true);
-    setError("");
+    const googleOAuthURL =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${GOOGLE_CLIENT_ID}&` +
+      `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
+      `response_type=id_token&` +
+      `scope=openid%20email%20profile&` +
+      `nonce=${NONCE}`;
 
-    const result = await apiCall("/api/user/login", "POST", values);
-    if (result.name === "AxiosError") {
-      setError(formatError(result));
-      setIsLoading(false);
+    window.location.href = googleOAuthURL;
+  };
+
+  const handleContinue = async () => {
+    if (!email || email.trim() === "") {
+      toast.error("Email address is required");
       return;
     }
 
-    // dispatch(setUser(result));
-    router.push(routes.DASHBOARD);
-    setIsLoading(false);
+    setLoading(true);
+    try {
+      const res = await apiCall("/api/findAccount", "POST", { email: email.trim() });
+
+      if (res && res.data) {
+        setAccountExists(true);
+        toast.success("Welcome back! Please enter your password.");
+      } else {
+        toast.error("No account found for this email.");
+      }
+    } catch (err) {
+      toast.error(formatError(err));
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleLogin = async () => {
+    setLoading(true);
+
+    try {
+      const result = await apiCall("/api/login", "POST", {
+        email,
+        password,
+      });
+
+      if (result.name === "AxiosError") {
+        toast.error(formatError(result));
+        return;
+      }
+
+      router.push(routes.DASHBOARD);
+    } catch (err) {
+      toast.error(formatError(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Auto-check if email is present in the URL
+  useEffect(() => {
+    if (initialEmail) {
+      handleContinue();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <CardWrapper
@@ -67,94 +102,90 @@ export const LoginForm = () => {
       backButtonLabel="New to Rafiki? Get Started"
       backButtonHref={routes.SIGNUP}
       topSlot={
-        <h1 className="text-3xl text-start font-bold text-gray-900 px-7 italic">Rafiki</h1>
+        <h1 className="text-3xl text-start font-bold text-gray-900 px-7 italic">
+          Rafiki
+        </h1>
       }
-      subTitle="Continue to Rafiki"
+      subTitle="Continue to Rafiki Account"
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email:</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="johndoe@example.com"
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+      <div className="space-y-6">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Email:</label>
+            <Input
+              type="email"
+              placeholder="johndoe@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading || accountExists}
             />
-
-            {/* <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password:</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center border border-gray-200 rounded-md focus-visible:ring-ring focus-visible:ring-1">
-                      <Input
-                        {...field}
-                        placeholder="Enter Password"
-                        type={isHidden ? "password" : "text"}
-                        className="border-0 shadow-none outline-none focus-visible:none focus-visible:ring-0"
-                      />
-                      <div className="cursor-pointer mr-2">
-                        {isHidden ? (
-                          <BsEyeSlash onClick={() => setIsHidden(false)} />
-                        ) : (
-                          <BsEye onClick={() => setIsHidden(true)} />
-                        )}
-                      </div>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
           </div>
 
-          <div className="space-y-2">
-            <Button
-              type="submit"
-              className="w-full bg-gray-800 hover:bg-gray-800 cursor-pointer"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Continue with email"}
-              <ClipLoader
-                color="#ffffff"
-                loading={loading}
-                size={20}
-                className="ml-4"
-              />
-            </Button>
+          {accountExists && (
+            <div>
+              <label className="block text-sm font-medium mb-1">Password:</label>
+              <div className="flex items-center border border-gray-200 rounded-md">
+                <Input
+                  type={isHidden ? "password" : "text"}
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="border-0 shadow-none outline-none focus-visible:ring-0"
+                />
+                <div className="cursor-pointer mr-2">
+                  {isHidden ? (
+                    <BsEyeSlash onClick={() => setIsHidden(false)} />
+                  ) : (
+                    <BsEye onClick={() => setIsHidden(true)} />
+                  )}
+                </div>
+              </div>
 
-            <Button
-              className="w-full bg-white hover:bg-white text-black border border-gray-900 cursor-pointer"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : (<>
+              <Link
+                href={routes.FORGOT}
+                className="text-sm hover:underline text-gray-700 cursor-pointer"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Button
+            type="button"
+            className="w-full bg-gray-800 hover:bg-gray-800 cursor-pointer"
+            onClick={accountExists ? handleLogin : handleContinue}
+            disabled={loading || googleLoading}
+          >
+            {loading
+              ? accountExists
+                ? "Logging in..."
+                : "Checking..."
+              : accountExists
+              ? "Log in"
+              : "Continue with email"}
+            <ClipLoader
+              color="#ffffff"
+              loading={loading}
+              size={20}
+              className="ml-4"
+            />
+          </Button>
+
+          <Button
+            type="button"
+            className="w-full bg-white hover:bg-white text-black border border-gray-900 cursor-pointer"
+            disabled={loading || googleLoading}
+            onClick={handleGoogleLogin}
+          >
+            <>
               <FcGoogle />
               Log in with Google
-              </>)}
-              <ClipLoader
-                color="#ffffff"
-                loading={loading}
-                size={20}
-                className="ml-4"
-              />
-            </Button>
-          </div>
-        </form>
-        {/* <BackButton label={"Forgot password?"} href={routes.FORGOT} /> */}
-      </Form>
+            </>
+          </Button>
+        </div>
+      </div>
     </CardWrapper>
   );
 };

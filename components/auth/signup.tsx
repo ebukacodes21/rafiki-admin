@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CardWrapper } from "@/components/card-wrapper";
 import { routes, countryList } from "@/constants";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { ClipLoader } from "react-spinners";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { apiCall, formatError } from "@/utils/helper";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LoginSchema } from "@/schema";
 import {
   Select,
@@ -32,15 +32,18 @@ import toast from "react-hot-toast";
 
 export const SignupForm = () => {
   const [isHidden, setIsHidden] = useState<boolean>(true);
-
-  const router = useRouter();
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
   const [loading, setIsLoading] = useState<boolean>(false);
+
+  const searchParams = useSearchParams();
+  const emailFromURL = searchParams.get("email") || "";
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: "",
+      email: emailFromURL,
       password: "",
     },
   });
@@ -48,17 +51,33 @@ export const SignupForm = () => {
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setIsLoading(true);
     const result = await apiCall("/api/signup", "POST", values);
-    console.log(result)
+
     if (result.name === "AxiosError") {
       toast.error(formatError(result));
       setIsLoading(false);
       return;
     }
 
-    // dispatch(setUser(result));
-    // router.push(routes.DASHBOARD);
+    toast.success(result.message, { duration: 5000 });
+    router.push(routes.LOGIN);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const fetchCountry = async () => {
+      try {
+        const response = await fetch("https://ip-api.io/api/v1/ip");
+        const data = await response.json();
+        if (data.location.country) {
+          setSelectedCountry(data.location.country);
+        }
+      } catch (error) {
+        console.error("Error fetching country:", error);
+      }
+    };
+
+    fetchCountry();
+  }, []);
 
   return (
     <CardWrapper
@@ -125,12 +144,12 @@ export const SignupForm = () => {
                 <FormItem>
                   <FormLabel>Password:</FormLabel>
                   <FormControl>
-                    <div className="flex items-center border border-gray-200 rounded-md focus-visible:ring-ring focus-visible:ring-1">
+                    <div className="flex items-center border border-gray-200 rounded-md">
                       <Input
                         {...field}
                         placeholder="Enter Password"
                         type={isHidden ? "password" : "text"}
-                        className="border-0 shadow-none outline-none focus-visible:none focus-visible:ring-0"
+                        className="border-0 shadow-none outline-none focus-visible:ring-0"
                       />
                       <div className="cursor-pointer mr-2">
                         {isHidden ? (

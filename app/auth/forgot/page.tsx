@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/auth/login'
+import { ForgotForm } from '@/components/auth/forgot'
 import { routes } from '@/constants'
 import Link from 'next/link'
 import React from 'react'
@@ -10,7 +10,7 @@ const page = () => {
         Rafiki
       </Link>
 
-      <LoginForm />
+      <ForgotForm />
     </div>
   )
 }

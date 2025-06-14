@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CardWrapper } from "../card-wrapper";
 import { countryList, routes } from "@/constants";
 import {
@@ -15,7 +15,6 @@ import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
-import { apiCall } from "@/utils/helper";
 import { v4 as uuidv4 } from "uuid";
 
 export const AccountForm = () => {
@@ -24,8 +23,9 @@ export const AccountForm = () => {
   const router = useRouter();
 
   const handleGoogleLogin = () => {
+    setIsLoading(true);
     const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-    const REDIRECT_URI = "http://localhost:3000/auth/callback";
+    const REDIRECT_URI = "http://localhost:3000/auth/callback-signup";
     const NONCE = uuidv4();
 
     const googleOAuthURL =
@@ -38,6 +38,22 @@ export const AccountForm = () => {
 
     window.location.href = googleOAuthURL;
   };
+
+  useEffect(() => {
+    const fetchCountry = async () => {
+      try {
+        const response = await fetch("https://ip-api.io/api/v1/ip");
+        const data = await response.json();
+        if (data.location.country) {
+          setSelectedCountry(data.location.country);
+        }
+      } catch (error) {
+        console.error("Error fetching country:", error);
+      }
+    };
+
+    fetchCountry();
+  }, []);
 
   return (
     <CardWrapper
