@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Launch Rafiki",
+  title: "Rafiki",
   description: "Your all in one suite for legal practitioners",
 };
 

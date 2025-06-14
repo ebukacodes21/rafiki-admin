@@ -1,30 +1,40 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiCall } from "@/utils/helper";
+import { apiCall, formatError } from "@/utils/helper";
+import { routes } from "@/constants";
 
 const page = () => {
   const router = useRouter();
+  const [statusMessage, setStatusMessage] = useState("Signing you in with Google...");
 
   useEffect(() => {
     const hash = window.location.hash;
     const params = new URLSearchParams(hash.substring(1));
     const token = params.get("id_token");
 
-    if (token) {
-      apiCall("/api/login-google", "POST", { token })
-        .then(() => {
-            console.log(token)
-        })
-        .catch(() => router.push("/error"));
-    } else {
-      console.log("error")
+    if (!token) {
+      setStatusMessage("Invalid or missing token. Please try again.");
+      return;
     }
-  }, []);
+
+    apiCall("/api/login-google", "POST", { token })
+      .then((result) => {
+        if (result?.name === "AxiosError") {
+          setStatusMessage(formatError(result));
+          return;
+        }
+
+        router.push(routes.DASHBOARD);
+      })
+      .catch((error) => {
+        setStatusMessage(formatError(error));
+      });
+  }, [router]);
 
   return (
-    <div className="h-screen bg-gradient-to-b from-white to-gray-900">
-        <p>Signing you in with Google...</p>
+    <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">
+      <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
     </div>
   );
 };

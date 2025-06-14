@@ -80,6 +80,7 @@ export const LoginForm = () => {
         return;
       }
 
+      console.log(result)
       router.push(routes.DASHBOARD);
     } catch (err) {
       toast.error(formatError(err));
