@@ -46,11 +46,11 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-t from-white to-gray-700 text-gray-900">
+    <div className="min-h-screen bg-gradient-to-t from-white to-gray-800 text-gray-900">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-6 py-24 text-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-6">Rafiki</h1>
-        <p className="text-xl md:text-4xl font-light mb-6">
+        <p className="text-xl md:text-4xl mb-6">
           The all-in-one platform to run your legal practice, online.
         </p>
 
@@ -86,7 +86,7 @@ export default function Home() {
           </button>
         </div>
 
-        <p className="text-sm text-gray-900 max-w-xl mx-auto">
+        <p className="text-sm font-semibold text-gray-900 max-w-xl mx-auto">
           Try Rafiki free for 7 days — no credit card required. By entering your
           email, you agree to receive legal updates and product communications.
         </p>
@@ -99,7 +99,7 @@ export default function Home() {
             <h2 className="text-4xl font-bold">
               Everything You Need to Run Your Firm
             </h2>
-            <p className="text-gray-700 mt-4 text-lg">
+            <p className="text-gray-700 font-semibold mt-4 text-lg">
               Built for lawyers, by technologists who understand practice
               management.
             </p>

@@ -8,13 +8,12 @@ import PracticeAreaStep from "./components/area";
 import { apiCall, formatError } from "@/utils/helper";
 import toast from "react-hot-toast";
 import FirmDetailsStep from "./components/firm-details";
-import AdminDetailsStep from "./components/admin-details";
+import AdminDetailsStep, { AdminForm } from "./components/admin-details";
 
 const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   const [step, setStep] = useState(0);
   const [started, setStarted] = useState(false);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
-
 
   const [firmName, setFirmName] = useState("");
   const [practiceArea, setPracticeArea] = useState("");
@@ -26,7 +25,6 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>(
     []
   );
-
 
   const handleNext = async () => {
     setDirection("forward");
@@ -61,35 +59,64 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
     website: "",
     email: "",
     location: "",
+    phone: "",
+    instagram: "",
+    x: "",
+    facebook: "",
+    founded: "",
   });
 
-    const [adminFormData, setAdminFormData] = useState({
-    fullName: "",
+  const [adminFormData, setAdminFormData] = useState<AdminForm>({
+    name: "",
     email: "",
     phone: "",
+    fullName: "",
     position: "",
-    name: ""
+    barNumber: "",
+    yearsOfExperience: "",
+    lawSchool: "",
+    documents: null
   });
 
   // Plan is the last step (index 2)
-const steps = [
-  {
-    title: "Firm Details",
-    content: <FirmDetailsStep formData={firmFormData} setFormData={setFirmFormData} />,
-  },
-  {
-    title: "Admin Details",
-    content: <AdminDetailsStep adminData={adminFormData} setAdminData={setAdminFormData} />,
-  },
-  {
-    title: "Practice Areas",
-    content: <PracticeAreaStep selectedAreas={selectedPracticeAreas} setSelectedAreas={setSelectedPracticeAreas} />,
-  },
+  const steps = [
     {
-    title: "Practice Areas",
-    content: <PracticeAreaStep selectedAreas={selectedPracticeAreas} setSelectedAreas={setSelectedPracticeAreas} />,
-  },
-];
+      title: "Firm Details",
+      content: (
+        <FirmDetailsStep
+          formData={firmFormData}
+          setFormData={setFirmFormData}
+        />
+      ),
+    },
+    {
+      title: "Admin Details",
+      content: (
+        <AdminDetailsStep
+          adminData={adminFormData}
+          setAdminData={setAdminFormData}
+        />
+      ),
+    },
+    {
+      title: "Practice Areas",
+      content: (
+        <PracticeAreaStep
+          selectedAreas={selectedPracticeAreas}
+          setSelectedAreas={setSelectedPracticeAreas}
+        />
+      ),
+    },
+    {
+      title: "Practice Areas",
+      content: (
+        <PracticeAreaStep
+          selectedAreas={selectedPracticeAreas}
+          setSelectedAreas={setSelectedPracticeAreas}
+        />
+      ),
+    },
+  ];
 
   const handleBack = () => {
     setDirection("backward");
