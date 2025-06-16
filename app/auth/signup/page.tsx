@@ -1,7 +1,7 @@
 import { SignupForm } from '@/components/auth/signup'
 import { routes } from '@/constants'
 import Link from 'next/link'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const page = () => {
   return (
@@ -10,7 +10,8 @@ const page = () => {
         Rafiki
       </Link>
 
-      <SignupForm />
+<Suspense fallback={<div>Loading...</div>}> <SignupForm /></Suspense>
+      
     </div>
   )
 }

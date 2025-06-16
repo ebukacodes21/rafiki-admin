@@ -55,6 +55,8 @@ export const config = {
     '/auth/callback-signup',
     '/auth/callback-signin',
     '/dashboard',
+     '/task',
     '/onboard',
+     "/online-firm"
   ],
 };

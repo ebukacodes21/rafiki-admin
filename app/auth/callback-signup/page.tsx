@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiCall, formatError } from "@/utils/helper";
 import { routes } from "@/constants";
+import { ClipLoader } from "react-spinners";
 
-const page = () => {
+const CallbackSignup = () => {
   const router = useRouter();
   const [statusMessage, setStatusMessage] = useState("Signing you up with Google...");
 
@@ -33,9 +34,12 @@ const page = () => {
 
   return (
     <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">
-      <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
+     <div className="flex space-x-2">
+       <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
+       <ClipLoader loading color="black" size={20}/>
+     </div>
     </div>
   );
 };
 
-export default page;
+export default CallbackSignup;

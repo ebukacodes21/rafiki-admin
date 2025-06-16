@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Onboardpage = () => {
   const router = useRouter();
   const onComplete = () => {
     router.push(routes.DASHBOARD);
@@ -24,4 +24,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Onboardpage;

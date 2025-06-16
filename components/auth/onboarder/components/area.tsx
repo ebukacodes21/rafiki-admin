@@ -1,105 +1,43 @@
-import { FC, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  BriefcaseIcon,
-  UserCircleIcon,
-  GlobeAmericasIcon,
-  ScaleIcon,
-} from "@heroicons/react/24/outline";
+"use client";
+import { FC } from "react";
+import { ScaleIcon, BriefcaseIcon, GlobeAmericasIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 
 interface PracticeAreaStepProps {
-  selectedOptions: string[];
-  setSelectedOptions: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedAreas: string[];
+  setSelectedAreas: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const PracticeAreaStep: FC<PracticeAreaStepProps> = ({ selectedOptions, setSelectedOptions}) => {
+const areas = [
+  { label: "Family Law", icon: UserGroupIcon },
+  { label: "Criminal Defense", icon: ScaleIcon },
+  { label: "Corporate Law", icon: BriefcaseIcon },
+  { label: "Public Interest", icon: GlobeAmericasIcon },
+];
 
-  const toggleOption = (option: string) => {
-    setSelectedOptions((prev) =>
-      prev.includes(option)
-        ? prev.filter((o) => o !== option)
-        : [...prev, option]
+const PracticeAreaStep: FC<PracticeAreaStepProps> = ({ selectedAreas, setSelectedAreas }) => {
+  const toggle = (label: string) => {
+    setSelectedAreas(prev =>
+      prev.includes(label) ? prev.filter(area => area !== label) : [...prev, label]
     );
   };
 
-  const options = [
-    {
-      label: "Business Law",
-      description: "Corporate, Contracts, Intellectual Property, Tax, Startups.",
-      icon: BriefcaseIcon,
-    },
-    {
-      label: "Personal Law",
-      description:  "Criminal Defense, Immigration, Estate Planning, Personal Injury, Family.",
-      icon: UserCircleIcon,
-    },
-    {
-      label: "Public & Social Law",
-      description: "Employment, Health, Environmental, Civil Rights, Education, Pro Bono",
-      icon: GlobeAmericasIcon,
-    },
-      {
-    label: "Litigation & Dispute Resolution",
-    description: "Arbitration, Mediation, Court Proceedings, Appeals",
-    icon: ScaleIcon, 
-  },
-  ];
-
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-gray-800">
-        What areas of law do you specialize in?
-      </h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {options.map(({ label, description, icon: Icon }) => {
-          const isSelected = selectedOptions.includes(label);
+    <div className="space-y-6 max-w-xl mx-auto p-6 bg-white rounded-lg shadow">
+      <h2 className="text-xl font-semibold text-gray-900">Select Your Practice Areas</h2>
+      <div className="grid grid-cols-2 gap-4">
+        {areas.map(({ label, icon: Icon }) => {
+          const active = selectedAreas.includes(label);
           return (
-            <label
+            <button
               key={label}
-              className={`relative flex items-start space-x-3 p-4 border rounded-md cursor-pointer transition-all duration-200 hover:shadow-sm ${
-                isSelected
-                  ? "border-gray-500 bg-gray-50"
-                  : "border-gray-300 bg-white"
+              onClick={() => toggle(label)}
+              className={`flex items-center space-x-3 p-3 rounded-md border transition ${
+                active ? "bg-black text-white border-black" : "border-gray-300 hover:border-black"
               }`}
-              onClick={() => toggleOption(label)}
             >
-              {/* Icon */}
-              <Icon className="h-6 w-6 mt-1 text-gray-600 flex-shrink-0" />
-
-              {/* Label and Description */}
-              <div className="flex flex-col">
-                <div className="font-medium text-gray-900">{label}</div>
-                <div className="text-sm text-gray-600">{description}</div>
-              </div>
-
-              {/* Animated Checkmark */}
-              <div className="absolute top-2 right-2">
-                <AnimatePresence>
-                  {isSelected && (
-                    <motion.div
-                      key="check"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.8, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <div className="h-5 w-5 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">
-                        ✓
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Hidden checkbox for a11y */}
-              <input
-                type="checkbox"
-                checked={isSelected}
-                onChange={() => toggleOption(label)}
-                className="hidden"
-              />
-            </label>
+              <Icon className="h-5 w-5" />
+              <span className="text-sm">{label}</span>
+            </button>
           );
         })}
       </div>

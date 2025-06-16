@@ -4,16 +4,21 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CardWrapper } from "../../card-wrapper";
 import { Button } from "../../ui/button";
-import ServiceChannelsStep from "./components/service";
 import PracticeAreaStep from "./components/area";
-import PlanComponent from "./components/plan";
 import { apiCall, formatError } from "@/utils/helper";
 import toast from "react-hot-toast";
+import FirmDetailsStep from "./components/firm-details";
+import AdminDetailsStep from "./components/admin-details";
 
 const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   const [step, setStep] = useState(0);
   const [started, setStarted] = useState(false);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
+
+
+  const [firmName, setFirmName] = useState("");
+  const [practiceArea, setPracticeArea] = useState("");
+  const [logo, setLogo] = useState<File | null>(null);
 
   const [selectedServiceChannels, setSelectedServiceChannels] = useState<
     string[]
@@ -22,48 +27,12 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
     []
   );
 
-  // Plan is the last step (index 2)
-  const steps = [
-    {
-      title: "Service Channels",
-      content: (
-        <ServiceChannelsStep
-          selectedOptions={selectedServiceChannels}
-          setSelectedOptions={setSelectedServiceChannels}
-        />
-      ),
-    },
-    {
-      title: "Practice Area",
-      content: (
-        <PracticeAreaStep
-          selectedOptions={selectedPracticeAreas}
-          setSelectedOptions={setSelectedPracticeAreas}
-        />
-      ),
-    },
-    {
-      title: "Choose the best plan for you",
-      content: (
-        <PlanComponent
-          onSkip={() => {
-            onComplete();
-          }}
-          onSelectPlan={() => {
-            onComplete();
-          }}
-        />
-      ),
-    },
-  ];
 
   const handleNext = async () => {
     setDirection("forward");
     if (step === steps.length - 2) {
       try {
         const payload = {
-          onboarded: true,
-          timestamp: new Date().toISOString(),
           serviceChannels: selectedServiceChannels,
           practiceAreas: selectedPracticeAreas,
         };
@@ -85,6 +54,42 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
       setStep((prev) => Math.min(prev + 1, steps.length - 1));
     }
   };
+
+  const [firmFormData, setFirmFormData] = useState({
+    firmName: "",
+    tagline: "",
+    website: "",
+    email: "",
+    location: "",
+  });
+
+    const [adminFormData, setAdminFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    position: "",
+    name: ""
+  });
+
+  // Plan is the last step (index 2)
+const steps = [
+  {
+    title: "Firm Details",
+    content: <FirmDetailsStep formData={firmFormData} setFormData={setFirmFormData} />,
+  },
+  {
+    title: "Admin Details",
+    content: <AdminDetailsStep adminData={adminFormData} setAdminData={setAdminFormData} />,
+  },
+  {
+    title: "Practice Areas",
+    content: <PracticeAreaStep selectedAreas={selectedPracticeAreas} setSelectedAreas={setSelectedPracticeAreas} />,
+  },
+    {
+    title: "Practice Areas",
+    content: <PracticeAreaStep selectedAreas={selectedPracticeAreas} setSelectedAreas={setSelectedPracticeAreas} />,
+  },
+];
 
   const handleBack = () => {
     setDirection("backward");

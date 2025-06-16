@@ -17,6 +17,6 @@ export const routes = {
   SUPPORT: "/",
 
   DASHBOARD: "/dashboard",
-  LOANS: "/loans",
-  SETTINGS: "/settings",
+  TASK: "/task",
+  ONLINE_FIRM: "/online-firm",
 };
