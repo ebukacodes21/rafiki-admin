@@ -56,7 +56,7 @@ const Nav = () => {
         onClick={() => setIsModalOpen(true)}
       >
         <img
-          src={"img.jpeg"}
+          src={"https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"}
           alt="User Avatar"
           className="w-full h-full object-cover"
         />
@@ -72,7 +72,7 @@ const Nav = () => {
         )} */}
 
         <ImagePreviewModal
-          imgUrl={"image.jpeg"}
+          imgUrl={"https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
