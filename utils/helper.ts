@@ -26,6 +26,7 @@ export const fileUploader = async (url: string, formData: FormData) => {
   }
 };
 
+
 export const formatError = (err: any) => {
   const errObj = err.response?.data?.error;
   const issues = err.response?.data?.error?.issues;

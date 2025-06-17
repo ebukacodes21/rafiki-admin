@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAME, routes } from "./constants";
-import { V2 } from "paseto"; // if using v2 tokens
-import * as fs from "fs/promises";
-
-const PUBLIC_KEY = process.env.PASETO_PUBLIC_KEY!; // from backend or file
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
@@ -22,29 +18,8 @@ export async function middleware(request: NextRequest) {
   ].includes(pathname);
 
   if (token) {
-    try {
-      const payload = await V2.verify(token, PUBLIC_KEY, {
-        audience: "rafiki-admin",
-        issuer: "rafiki",
-      });
-
-      const isOnboarded = payload.isOnboarded;
-
-      if (pathname === routes.ONBOARD && isOnboarded) {
-        return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
-      }
-
-      if (!isOnboarded && pathname !== routes.ONBOARD) {
-        return NextResponse.redirect(new URL(routes.ONBOARD, request.url));
-      }
-
-      if (isPublicPath) {
-        return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
-      }
-
-    } catch (err) {
-      console.error("Token validation failed:", err);
-      return NextResponse.redirect(new URL(routes.LOGIN, request.url));
+    if (isPublicPath) {
+      return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
     }
   } else {
     if (!isPublicPath) {
@@ -67,8 +42,8 @@ export const config = {
     '/auth/callback-signup',
     '/auth/callback-signin',
     '/dashboard',
-     '/task',
+    '/task',
     '/onboard',
-     "/online-firm"
+    '/online-firm',
   ],
 };

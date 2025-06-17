@@ -29,7 +29,7 @@ export const LoginForm = () => {
   const handleGoogleLogin = () => {
     setGoogleLoading(true);
     const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-    const REDIRECT_URI = "https://rafiiki.netlify.app/auth/callback-signin";
+    const REDIRECT_URI = process.env.NEXT_PUBLIC_CALLBACK_SIGNIN!;
     const NONCE = uuidv4();
 
     const googleOAuthURL =
