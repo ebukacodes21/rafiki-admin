@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
         issuer: "rafiki",
       });
 
-      const isOnboarded = payload.is_onboarded;
+      const isOnboarded = payload.isOnboarded;
 
       if (pathname === routes.ONBOARD && isOnboarded) {
         return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
