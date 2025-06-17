@@ -1,58 +1,73 @@
-import React from "react";
-import { CheckIcon } from "@heroicons/react/24/solid";
+import { CheckIcon } from "@heroicons/react/24/outline";
 
-interface PlanComponentProps {
-  onSkip: () => void;
-  onSelectPlan: () => void;
+type PlanProp = {
+  onComplete: () => void;
 }
 
-const PlanComponent: React.FC<PlanComponentProps> = ({ onSkip, onSelectPlan }) => {
-  const features = [
-    "Customizable client intake forms",
-    "Secure document storage",
-    "Automated appointment reminders",
-    "Integrated payment processing",
-    "24/7 client messaging portal",
+export default function SubscriptionPlans({ onComplete }: PlanProp) {
+  const plans = [
+    {
+      name: "Basic",
+      price: "$29",
+      features: [
+        "Access to dashboard",
+        "Basic client tools",
+        "1 Admin account",
+        "Email support",
+      ],
+    },
+    {
+      name: "Professional",
+      price: "$59",
+      features: [
+        "All Basic features",
+        "5 Admin accounts",
+        "Client portal access",
+        "Priority support",
+      ],
+    },
+    {
+      name: "Elite",
+      price: "$129",
+      features: [
+        "Everything in Professional",
+        "Unlimited Admins",
+        "White-label branding",
+        "Dedicated account manager",
+      ],
+    },
   ];
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8 text-gray-900 font-sans">
-      <h2 className="text-3xl font-extrabold mb-2 text-gray-700">Pro Plan</h2>
-      <p className="text-gray-600 mb-6">
-        Try free for 7 days. Then just{" "}
-        <span className="font-bold">$10/month</span>.
-      </p>
-
-      <ul className="mb-8 space-y-3">
-        {features.map((feature) => (
-          <li key={feature} className="flex items-center space-x-3">
-            <CheckIcon className="h-6 w-6 text-green-500" />
-            <span>{feature}</span>
-          </li>
+    <div className="bg-white py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+        Choose Your Plan
+      </h2>
+      <div className="grid md:grid-cols-3 gap-8">
+        {plans.map((plan) => (
+          <div
+            key={plan.name}
+            className="relative bg-white rounded-xl shadow-lg border-2 border-yellow-400"
+          >
+            <div className="absolute inset-0 rounded-xl border-[3px] border-yellow-300 opacity-30 pointer-events-none" />
+            <div className="p-6 space-y-4 z-10 relative">
+              <h3 className="text-xl font-semibold text-gray-900">{plan.name}</h3>
+              <p className="text-4xl font-bold text-yellow-600">{plan.price}<span className="text-base text-gray-600">/mo</span></p>
+              <ul className="space-y-2 text-sm text-gray-700">
+                {plan.features.map((feature, i) => (
+                  <li key={i} className="flex items-center">
+                    <CheckIcon className="w-5 h-5 text-yellow-500 mr-2" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={onComplete} className="w-full mt-6 py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-md transition">
+                Select Plan
+              </button>
+            </div>
+          </div>
         ))}
-      </ul>
-
-      <button
-        type="button"
-        onClick={onSelectPlan}
-        className="w-full bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 rounded-md transition-colors duration-300"
-      >
-        Start 7-Day Free Trial
-      </button>
-
-      <button
-        type="button"
-        onClick={onSkip}
-        className="w-full mt-4 bg-transparent border border-gray-500 hover:bg-gray-100 text-gray-700 font-semibold py-3 rounded-md transition-colors duration-300"
-      >
-        Skip for now
-      </button>
-
-      <p className="mt-4 text-sm text-gray-500 text-center">
-        Cancel anytime before trial ends, no charge.
-      </p>
+      </div>
     </div>
   );
-};
-
-export default PlanComponent;
+}

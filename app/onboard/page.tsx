@@ -2,14 +2,23 @@
 import OnboardComponent from "@/components/auth/onboarder/onboard";
 import { routes } from "@/constants";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Modal } from "@/components/modal";
+import SubscriptionPlans from "@/components/auth/onboarder/components/plan";
 
 const Onboardpage = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const router = useRouter();
+
   const onComplete = () => {
-    router.push(routes.DASHBOARD);
+   setShowModal(!showModal)
   };
+
+  const go =() => {
+    router.push(routes.DASHBOARD)
+  }
+
   return (
     <div className="min-h-screen relative bg-gradient-to-b from-white to-gray-900 flex items-center justify-center">
       <Link
@@ -20,6 +29,10 @@ const Onboardpage = () => {
       </Link>
 
       <OnboardComponent onComplete={onComplete} />
+
+      <Modal show={showModal}>
+        <SubscriptionPlans onComplete={go}/>
+      </Modal>
     </div>
   );
 };

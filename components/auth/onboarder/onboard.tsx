@@ -8,104 +8,105 @@ import PracticeAreaStep from "./components/area";
 import { apiCall, formatError } from "@/utils/helper";
 import toast from "react-hot-toast";
 import FirmDetailsStep from "./components/firm-details";
-import AdminDetailsStep, { AdminForm } from "./components/admin-details";
+import AdminDetailsStep from "./components/admin-details";
+import { useForm } from "react-hook-form";
+import { AdminFormSchema, FirmFormSchema } from "@/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { ClipLoader } from "react-spinners";
 
 const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   const [step, setStep] = useState(0);
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState<boolean>(false);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
-
-  const [firmName, setFirmName] = useState("");
-  const [practiceArea, setPracticeArea] = useState("");
-  const [logo, setLogo] = useState<File | null>(null);
-
-  const [selectedServiceChannels, setSelectedServiceChannels] = useState<
-    string[]
-  >([]);
-  const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>(
-    []
-  );
+  const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
   const handleNext = async () => {
     setDirection("forward");
-    if (step === steps.length - 2) {
+
+    if (step === 0) {
+      const isValid = await form.trigger();
+      if (!isValid) {
+        toast.error("please complete the required fields before proceeding.");
+        return;
+      }
+    }
+
+    // if (step === 1) {
+    //   const isValid = await admin.trigger();
+    //   if (!isValid) {
+    //     toast.error("please complete the required fields before proceeding.");
+    //     return;
+    //   }
+    // }
+
+    // Only on last step, submit
+    if (step === steps.length - 1) {
+      setLoading(true)
       try {
         const payload = {
-          serviceChannels: selectedServiceChannels,
+          firm: form.getValues(),
+          admin: admin.getValues(),
           practiceAreas: selectedPracticeAreas,
         };
 
         const response = await apiCall("/api/onboard", "POST", { payload });
+        console.log(response)
         if (response.name === "AxiosError") {
           toast.error(formatError(response));
+          setLoading(false)
           return;
         }
 
-        setStep((prev) => prev + 1);
+        onComplete(); 
       } catch (error) {
         console.error(error);
-        alert("Error verifying onboarding. Please try again.");
+        toast.error("Something went wrong. Try again.");
       }
-    } else if (step === steps.length - 1) {
-      // Final step action
     } else {
       setStep((prev) => Math.min(prev + 1, steps.length - 1));
     }
   };
 
-  const [firmFormData, setFirmFormData] = useState({
-    firmName: "",
-    tagline: "",
-    website: "",
-    email: "",
-    location: "",
-    phone: "",
-    instagram: "",
-    x: "",
-    facebook: "",
-    founded: "",
+  const form = useForm<z.infer<typeof FirmFormSchema>>({
+    resolver: zodResolver(FirmFormSchema),
+    defaultValues: {
+      firmName: "",
+      tagline: "",
+      website: "",
+      email: "",
+      location: "",
+      phone: "",
+      instagram: "",
+      x: "",
+      facebook: "",
+      founded: "",
+    },
   });
 
-  const [adminFormData, setAdminFormData] = useState<AdminForm>({
-    name: "",
-    email: "",
-    phone: "",
-    fullName: "",
-    position: "",
-    barNumber: "",
-    yearsOfExperience: "",
-    lawSchool: "",
-    documents: null
+  const admin = useForm<z.infer<typeof AdminFormSchema>>({
+    resolver: zodResolver(AdminFormSchema),
+    defaultValues: {
+      phone: "",
+      fullName: "",
+      position: "",
+      enrollNumber: "",
+      yearsOfExperience: "",
+      lawSchool: "",
+      document: "",
+    },
   });
 
   // Plan is the last step (index 2)
   const steps = [
     {
       title: "Firm Details",
-      content: (
-        <FirmDetailsStep
-          formData={firmFormData}
-          setFormData={setFirmFormData}
-        />
-      ),
+      content: <FirmDetailsStep form={form} />,
     },
     {
       title: "Admin Details",
-      content: (
-        <AdminDetailsStep
-          adminData={adminFormData}
-          setAdminData={setAdminFormData}
-        />
-      ),
-    },
-    {
-      title: "Practice Areas",
-      content: (
-        <PracticeAreaStep
-          selectedAreas={selectedPracticeAreas}
-          setSelectedAreas={setSelectedPracticeAreas}
-        />
-      ),
+      content: <AdminDetailsStep form={admin} />,
     },
     {
       title: "Practice Areas",
@@ -212,9 +213,9 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
             <Button
               className="cursor-pointer"
               onClick={handleNext}
-              disabled={step === steps.length - 1}
+              disabled={step === steps.length - 0 || loading}
             >
-              {step === steps.length - 2 ? "Complete Setup" : "Next"}
+              {step === steps.length - 1 ? `Complete Setup` : "Next"}
             </Button>
           </div>
         </>

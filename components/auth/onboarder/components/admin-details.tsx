@@ -1,60 +1,107 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
-  UserIcon,
-  EnvelopeIcon,
   PhoneIcon,
   BriefcaseIcon,
   IdentificationIcon,
   AcademicCapIcon,
-  DocumentArrowUpIcon,
+  UserIcon
 } from "@heroicons/react/24/outline";
+import * as z from "zod";
+import { AdminFormSchema } from "@/schema";
+import { UseFormReturn } from "react-hook-form";
+import { FileUpload } from "@/components/fileUploader";
+import { fileUploader, formatError } from "@/utils/helper";
+import toast from "react-hot-toast";
 
-export interface AdminForm {
-  name: string;
-  email: string;
-  phone: string;
-  fullName: string;
-  position: string;
-  barNumber: string;
-  yearsOfExperience: string;
-  lawSchool: string;
-  documents: FileList | null;
-}
+type FormType = z.infer<typeof AdminFormSchema>;
 
 interface AdminDetailsStepProps {
-  adminData: AdminForm;
-  setAdminData: React.Dispatch<React.SetStateAction<AdminForm>>;
+  form: UseFormReturn<FormType>;
 }
 
-const AdminDetailsStep: FC<AdminDetailsStepProps> = ({
-  adminData,
-  setAdminData,
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-    if (name === "documents") {
-      setAdminData((prev) => ({ ...prev, documents: files }));
-    } else {
-      setAdminData((prev) => ({ ...prev, [name]: value }));
+const requiredFields: (keyof FormType)[] = [
+  "fullName",
+  "phone",
+  "position",
+  "enrollNumber",
+  "yearsOfExperience",
+  "lawSchool",
+  "document",
+];
+
+const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isUploaded, setIsUploaded] = useState<boolean>(false);
+  const handleFileUpload = async (file: File | undefined) => {
+    if (!file || isUploaded) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    setLoading(true);
+
+    const result = await fileUploader("/api/upload", formData);
+    setLoading(false);
+
+    if (result?.name === "AxiosError") {
+      toast.error(formatError(result));
+      return;
     }
+
+    const fileUrl = result.fileUrl;
+    form.setValue("document", fileUrl, { shouldValidate: true });
+    toast.success("File uploaded successfully!");
+    setIsUploaded(true); 
   };
 
-  const Field = ({ label, name, placeholder, Icon, type = "text" }: any) => (
+  const {
+    register,
+    formState: { errors },
+  } = form;
+
+  const InputField = ({
+    label,
+    name,
+    placeholder,
+    Icon,
+    type = "text",
+    iconColor = "text-gray-400",
+  }: {
+    label: string;
+    name: keyof FormType;
+    placeholder: string;
+    Icon: FC<any>;
+    type?: string;
+    iconColor?: string;
+  }) => (
     <div className="space-y-1">
-      <label className="text-sm text-gray-700">{label}</label>
-      <div className="flex items-center border rounded-md px-3 py-2">
-        <Icon className="h-5 w-5 text-gray-400 mr-2" />
+      <label className="text-sm text-gray-700 font-medium">
+        {label}
+        {requiredFields.includes(name) && (
+          <span className="text-red-500 ml-1">*</span>
+        )}
+      </label>
+      <div
+        className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${
+          errors[name]
+            ? "border-red-500 focus-within:ring-red-500"
+            : "border-gray-300 focus-within:ring-black"
+        }`}
+      >
+        <Icon className={`h-5 w-5 mr-2 ${iconColor}`} />
         <input
           type={type}
-          name={name}
-          value={(adminData as any)[name]}
-          onChange={handleChange}
           placeholder={placeholder}
-          className="w-full border-none outline-none text-sm"
+          {...register(name)}
+          className="w-full border-none outline-none text-sm text-gray-800 placeholder-gray-400"
         />
       </div>
+      {errors[name] && (
+        <p className="text-xs text-red-600">
+          {errors[name]?.message as string}
+        </p>
+      )}
     </div>
   );
 
@@ -64,71 +111,63 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({
         Admin (Lawyer) Details
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <Field
+        <InputField
           label="Full Name"
-          name="name"
-          placeholder="Jane Doe"
+          name="fullName"
+          placeholder="John Doe"
           Icon={UserIcon}
+          iconColor="text-orange-600"
         />
-        <Field
-          label="Email"
-          name="email"
-          placeholder="admin@yourfirm.com"
-          Icon={EnvelopeIcon}
-        />
-        <Field
+        <InputField
           label="Phone Number"
           name="phone"
           placeholder="+254..."
           Icon={PhoneIcon}
+          iconColor="text-green-600"
         />
-        <Field
+        <InputField
           label="Position/Title"
           name="position"
           placeholder="Managing Partner"
           Icon={BriefcaseIcon}
+          iconColor="text-blue-600"
         />
-        <Field
-          label="Lawyer Registration Number (e.g. Supreme Court Number, Enrolment Number)"
-          name="barNumber"
-          placeholder="e.g. SCN123456 or LSK123456"
+        <InputField
+          label="Enrollment Number"
+          name="enrollNumber"
+          placeholder="SCN123456"
           Icon={IdentificationIcon}
+          iconColor="text-amber-600"
         />
-        <Field
+        <InputField
           label="Years of Experience"
           name="yearsOfExperience"
           placeholder="5"
-          Icon={BriefcaseIcon}
           type="number"
+          Icon={BriefcaseIcon}
+          iconColor="text-purple-600"
         />
-        <Field
+        <InputField
           label="Law School Attended"
           name="lawSchool"
           placeholder="University of Nairobi"
           Icon={AcademicCapIcon}
+          iconColor="text-sky-600"
         />
       </div>
 
-      <div className="space-y-1">
-        <label className="text-sm text-gray-700 font-medium">
-          Upload Credentials (PDF, JPG, PNG)
-        </label>
-        <div className="flex items-center border rounded-md px-3 py-2">
-          <DocumentArrowUpIcon className="h-5 w-5 text-gray-400 mr-2" />
-          <input
-            type="file"
-            name="documents"
-            onChange={handleChange}
-            accept=".pdf,.jpg,.jpeg,.png"
-            multiple
-            className="w-full text-sm text-gray-600"
-          />
-        </div>
-        <p className="text-xs text-gray-500 mt-1">
-          Upload Bar Certificate, Law Degree, ID/Passport, and Practice License
-          if available.
-        </p>
-      </div>
+      {/* File Upload Field */}
+      <FileUpload
+        title={"Upload a qualifying document"}
+        onChange={(file) => handleFileUpload(file)}
+        isLoading={loading}
+        disabled={isUploaded}
+        message={
+          isUploaded
+            ? "Document uploaded successfully 🎉"
+            : "Upload a qualifying document (Call to Bar Certificate, Practice Licence)"
+        }
+      />
     </div>
   );
 };

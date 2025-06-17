@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAME, routes } from "./constants";
+import { V2 } from "paseto"; // if using v2 tokens
+import * as fs from "fs/promises";
+
+const PUBLIC_KEY = process.env.PASETO_PUBLIC_KEY!; // from backend or file
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
-  const isOnboarded = request.cookies.get("is_onboarded")?.value;
   const pathname = request.nextUrl.pathname;
 
   const isPublicPath = [
@@ -19,22 +22,31 @@ export async function middleware(request: NextRequest) {
   ].includes(pathname);
 
   if (token) {
-    // authenticated user
-    if (pathname === routes.ONBOARD && isOnboarded === "true") {
-      return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
-    }
+    try {
+      const payload = await V2.verify(token, PUBLIC_KEY, {
+        audience: "rafiki-admin",
+        issuer: "rafiki",
+      });
 
-    if (!isOnboarded || isOnboarded === "false") {
-      if (pathname !== routes.ONBOARD) {
+      const isOnboarded = payload.is_onboarded;
+
+      if (pathname === routes.ONBOARD && isOnboarded) {
+        return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
+      }
+
+      if (!isOnboarded && pathname !== routes.ONBOARD) {
         return NextResponse.redirect(new URL(routes.ONBOARD, request.url));
       }
-    }
 
-    if (isPublicPath) {
-      return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
+      if (isPublicPath) {
+        return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
+      }
+
+    } catch (err) {
+      console.error("Token validation failed:", err);
+      return NextResponse.redirect(new URL(routes.LOGIN, request.url));
     }
   } else {
-    // unauthenticated trying to access private page
     if (!isPublicPath) {
       return NextResponse.redirect(new URL(routes.LOGIN, request.url));
     }
