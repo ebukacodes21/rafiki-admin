@@ -33,13 +33,13 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
       }
     }
 
-    // if (step === 1) {
-    //   const isValid = await admin.trigger();
-    //   if (!isValid) {
-    //     toast.error("please complete the required fields before proceeding.");
-    //     return;
-    //   }
-    // }
+    if (step === 1) {
+      const isValid = await admin.trigger();
+      if (!isValid) {
+        toast.error("please complete the required fields before proceeding.");
+        return;
+      }
+    }
 
     // Only on last step, submit
     if (step === steps.length - 1) {
