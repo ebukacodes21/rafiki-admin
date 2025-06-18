@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script"; 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import { decodeToken } from "@/lib/auth";
+import ReduxProvider from "@/redux/hooks/reduxProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +26,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <ReduxProvider>
+          <html lang="en">
       <head>
        <Script
         src="https://accounts.google.com/gsi/client"
@@ -42,5 +43,6 @@ export default async function RootLayout({
         {children}
       </body>
     </html>
+    </ReduxProvider>
   );
 }

@@ -3,8 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import { FiEye } from "react-icons/fi";
+import { useAppSelector } from "@/redux/hooks/useSelectorHook";
+import { selectCurrentUser } from "@/redux/features/auth";
 
 const OnlineFirmEditor = () => {
+  const user = useAppSelector(selectCurrentUser)
+  console.log(user)
   return (
     <div className="h-screen">
       {/* Top Bar */}

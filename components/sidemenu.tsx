@@ -1,34 +1,41 @@
-'use client'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import React from 'react'
+"use client";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React from "react";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { FaTasks } from "react-icons/fa";
-import { VscSignOut } from 'react-icons/vsc'
+import { VscSignOut } from "react-icons/vsc";
 import { HiBuildingOffice2 } from "react-icons/hi2";
-import axios from 'axios'
-// import { useAppDispatch } from '@/redux/hooks/useSelectorHook'
-// import { logOut } from '@/redux/features/auth'
-import { routes } from '@/constants'
-import { apiCall } from '@/utils/helper';
+import { useAppDispatch } from "@/redux/hooks/useSelectorHook";
+import { logOut } from "@/redux/features/auth";
+import { routes } from "@/constants";
+import { apiCall } from "@/utils/helper";
 
 const menuItems = [
-  { title: 'Dashboard', path: routes.DASHBOARD, icon: <MdOutlineDashboardCustomize size={20} /> },
-  { title: 'Tasks', path: routes.TASK, icon: <FaTasks size={20} /> },
-  { title: 'Online Firm', path: routes.ONLINE_FIRM, icon: <HiBuildingOffice2 size={20} /> },
+  {
+    title: "Dashboard",
+    path: routes.DASHBOARD,
+    icon: <MdOutlineDashboardCustomize size={20} />,
+  },
+  { title: "Tasks", path: routes.TASK, icon: <FaTasks size={20} /> },
+  {
+    title: "Online Firm",
+    path: routes.ONLINE_FIRM,
+    icon: <HiBuildingOffice2 size={20} />,
+  },
 ];
 
 const SideMenu = () => {
   const pathname = usePathname();
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const logout = async () => {
     try {
-      await apiCall('/api/logout', "GET");
-      // dispatch(logOut());
+      await apiCall("/api/logout", "GET");
+      dispatch(logOut());
       router.push(routes.LOGIN);
     } catch (err) {
-      console.error('Logout error:', err);
+      console.error("Logout error:", err);
     }
   };
 
@@ -45,8 +52,8 @@ const SideMenu = () => {
                 href={path}
                 className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-gray-100 text-primary font-semibold'
-                    : 'hover:bg-gray-50'
+                    ? "bg-gray-100 text-primary font-semibold"
+                    : "hover:bg-gray-50"
                 }`}
               >
                 {icon}
