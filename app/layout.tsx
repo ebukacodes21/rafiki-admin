@@ -3,9 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script"; 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import { getUserFromToken } from "@/lib/auth";
-// import { redirect } from "next/navigation";
-// import { routes } from "@/constants";
+import { decodeToken } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +25,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const payload = await getUserFromToken()
-  console.log(payload)
   return (
     <html lang="en">
       <head>

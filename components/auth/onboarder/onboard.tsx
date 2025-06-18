@@ -13,7 +13,6 @@ import { useForm } from "react-hook-form";
 import { AdminFormSchema, FirmFormSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ClipLoader } from "react-spinners";
 
 const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   const [step, setStep] = useState(0);
@@ -45,20 +44,19 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
     if (step === steps.length - 1) {
       setLoading(true)
       try {
-        const payload = {
+        const response = await apiCall("/api/onboard", "POST", {
           firm: form.getValues(),
           admin: admin.getValues(),
           practiceAreas: selectedPracticeAreas,
-        };
+        });
 
-        const response = await apiCall("/api/onboard", "POST", { payload });
-        console.log(response)
         if (response.name === "AxiosError") {
           toast.error(formatError(response));
           setLoading(false)
           return;
         }
 
+        toast.success(response)
         onComplete(); 
       } catch (error) {
         console.error(error);

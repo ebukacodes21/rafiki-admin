@@ -18,7 +18,7 @@ export const Modal = ({ show, children }: ModalProp) => {
                     className="fixed inset-0 bg-[#0a0b0d]/75 bg-opacity-75 transition-opacity cursor-pointer"
                     aria-hidden="true"
                 ></div>
-                <div className="inline-block align-bottom bg-[#F4F0EE] rounded-sm py-10 px-10 overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full w-full max-w-3xl border-l-4 border-[#D61F28]">
+                <div className="inline-block align-bottom bg-[#F4F0EE] rounded-sm py-10 px-10 overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-full w-full max-w-3xl">
                     {children}
                 </div>
             </div>

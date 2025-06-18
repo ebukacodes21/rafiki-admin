@@ -7,7 +7,9 @@ import { ClipLoader } from "react-spinners";
 
 const CallbackSignin = () => {
   const router = useRouter();
-  const [statusMessage, setStatusMessage] = useState("Signing you in with Google...");
+  const [statusMessage, setStatusMessage] = useState(
+    "Signing you in with Google..."
+  );
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -25,8 +27,7 @@ const CallbackSignin = () => {
           setStatusMessage(formatError(result));
           return;
         }
-
-        router.push(routes.DASHBOARD);
+        window.location.href = routes.DASHBOARD;
       })
       .catch((error) => {
         setStatusMessage(formatError(error));
@@ -35,10 +36,10 @@ const CallbackSignin = () => {
 
   return (
     <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">
-       <div className="flex space-x-2 items-center">
-       <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
-       <ClipLoader loading color="black" size={20}/>
-     </div>
+      <div className="flex space-x-2 items-center">
+        <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
+        <ClipLoader loading color="black" size={20} />
+      </div>
     </div>
   );
 };

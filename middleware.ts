@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAME, routes } from "./constants";
+import { jwtVerify } from 'jose';
+
+const secret = new TextEncoder().encode(process.env.SECRET_KEY || '');
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
@@ -17,11 +20,23 @@ export async function middleware(request: NextRequest) {
     routes.CALLBACK_SIGNUP,
   ].includes(pathname);
 
-  if (token) {
-    if (isPublicPath) {
+  if (!token) {
+    if (!isPublicPath) {
+      return NextResponse.redirect(new URL(routes.LOGIN, request.url));
+    }
+    return NextResponse.next();
+  }
+
+  try {
+    const {payload} = await jwtVerify(token, secret);
+    if (!payload.isOnboarded && pathname !== routes.ONBOARD) {
+      return NextResponse.redirect(new URL(routes.ONBOARD, request.url));
+    }
+
+    if (payload.isOnboarded && pathname === routes.ONBOARD) {
       return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
     }
-  } else {
+  } catch (err) {
     if (!isPublicPath) {
       return NextResponse.redirect(new URL(routes.LOGIN, request.url));
     }

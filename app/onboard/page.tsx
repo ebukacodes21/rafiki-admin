@@ -4,20 +4,19 @@ import { routes } from "@/constants";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Modal } from "@/components/modal";
 import SubscriptionPlans from "@/components/auth/onboarder/components/plan";
 
-const Onboardpage = () => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+const OnboardPage = () => {
+  const [onboarded, setOnboarded] = useState<boolean>(false);
   const router = useRouter();
 
-  const onComplete = () => {
-   setShowModal(!showModal)
+  const handleOnboardComplete = () => {
+    setOnboarded(true);
   };
 
-  const go =() => {
-    router.push(routes.DASHBOARD)
-  }
+  const handlePlanComplete = () => {
+    router.push(routes.DASHBOARD);
+  };
 
   return (
     <div className="min-h-screen relative bg-gradient-to-b from-white to-gray-900 flex items-center justify-center">
@@ -28,13 +27,13 @@ const Onboardpage = () => {
         Rafiki
       </Link>
 
-      <OnboardComponent onComplete={onComplete} />
-
-      <Modal show={showModal}>
-        <SubscriptionPlans onComplete={go}/>
-      </Modal>
+      {!onboarded ? (
+        <OnboardComponent onComplete={handleOnboardComplete} />
+      ) : (
+        <SubscriptionPlans onComplete={handlePlanComplete} />
+      )}
     </div>
   );
 };
 
-export default Onboardpage;
+export default OnboardPage;

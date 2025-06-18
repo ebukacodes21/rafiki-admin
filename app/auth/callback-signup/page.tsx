@@ -25,7 +25,7 @@ const CallbackSignup = () => {
           setStatusMessage(formatError(result));
           return;
         }
-        router.push(routes.DASHBOARD);
+        window.location.href = routes.ONBOARD;
       })
       .catch((error) => {
         setStatusMessage(formatError(error));

@@ -13,12 +13,6 @@ export async function GET(request: NextRequest) {
             expires: new Date(0)
         });
 
-         response.cookies.set("is_onboarded", '', {
-            httpOnly: true,
-            path: '/',
-            expires: new Date(0)
-        });
-
         return response;
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: error.response.status })
