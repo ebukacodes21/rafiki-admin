@@ -80,7 +80,6 @@ export const LoginForm = () => {
         return;
       }
 
-      if (!result.admin.isOnboarded) router.push(routes.ONBOARD)
       router.push(routes.DASHBOARD);
     } catch (err) {
       toast.error(formatError(err));

@@ -50,7 +50,7 @@ export const SignupForm = () => {
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setIsLoading(true);
-    const result = await apiCall("/api/signup", "POST", values);
+    const result = await apiCall("/api/signup", "POST", {...values, country: selectedCountry});
 
     if (result.name === "AxiosError") {
       toast.error(formatError(result));
