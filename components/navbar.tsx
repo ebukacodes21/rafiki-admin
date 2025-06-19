@@ -1,24 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { IoMdMenu } from "react-icons/io";
-import { AiOutlineCloseCircle } from "react-icons/ai";
+import { IoMdArrowDropdown } from "react-icons/io";
 import Link from "next/link";
-import moment from "moment";
-import { ImagePreviewModal } from "@/components/image-viewer";
-// import { useAppSelector } from "@/redux/hooks/useSelectorHook";
-// import { selectCurrentUser } from "@/redux/features/auth";
+import { UserPlusIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { MobileMenu } from "./mobile-menu";
+import { useAppSelector } from "@/redux/hooks/useSelectorHook";
+import { selectCurrentUser } from "@/redux/features/auth";
 
 const Nav = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const admin = useAppSelector(selectCurrentUser);
 
-  const user = { firstName: "Ada", lastName: "Lovelace", lastLogin: new Date() }; // mock
-  const userName = `${user.firstName} ${user.lastName}`;
-  const lastLogin = moment(user?.lastLogin).format("MMMM Do YYYY");
-
-  const toggleMobileMenu = () => setShowMobileMenu((prev) => !prev);
+  const handleShowMobileMenu = () => {
+    setShowMobileMenu((prev) => !prev);
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -28,62 +25,60 @@ const Nav = () => {
 
   return (
     <>
-      <nav className="md:hidden bg-gradient-to-r from-gray-900 to-blue-900 text-white shadow-md w-full z-20 border-b border-blue-600">
-        <div className="flex items-center justify-between px-6 py-4">
-          {/* Left Section: Logo & Menu */}
-          <div className="flex items-center gap-4">
-            {/* Mobile Toggle */}
-            <div className="lg:hidden">
-              {showMobileMenu ? (
-                <AiOutlineCloseCircle
-                  onClick={toggleMobileMenu}
-                  className="w-6 h-6 text-white cursor-pointer hover:text-blue-300"
-                />
-              ) : (
-                <IoMdMenu
-                  onClick={toggleMobileMenu}
-                  className="w-6 h-6 text-white cursor-pointer hover:text-blue-300"
-                />
-              )}
-            </div>
-
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-white tracking-wide hover:text-blue-300 transition-colors">
-                Rafiki
-              </span>
-            </Link>
+      <div className="flex justify-end mr-5">
+        <div className="flex justify-between items-center gap-2">
+          {/* Mobile toggle */}
+          <div className="lg:hidden">
+            {showMobileMenu ? (
+              <XMarkIcon
+                onClick={handleShowMobileMenu}
+                className="text-gray-700 w-8 h-8 cursor-pointer"
+              />
+            ) : (
+              <Bars3Icon
+                onClick={handleShowMobileMenu}
+                className="text-gray-700 w-8 h-8 cursor-pointer"
+              />
+            )}
           </div>
 
-          {/* Right Section: User Info */}
-          <div className="flex items-center gap-4">
-            <div className="text-sm text-right hidden sm:block">
-              <p className="text-xs text-gray-300">Welcome back,</p>
-              <p className="font-semibold">{userName}</p>
-              <p className="text-xs text-gray-400">Last login: {lastLogin}</p>
+          {/* Right icons */}
+          <div className="flex items-center gap-3">
+            {/* Invite Lawyer Tooltip */}
+            <div className="relative group">
+              <div className="p-2 rounded-md cursor-pointer hover:bg-gray-100 transition">
+                <UserPlusIcon className="w-5 h-5 text-gray-800" />
+              </div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                Invite Lawyer
+              </div>
             </div>
 
-            {/* Avatar */}
-            <div
-              className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-md cursor-pointer hover:ring-2 hover:ring-blue-400 transition-all"
-              onClick={() => setIsModalOpen(true)}
+            {/* User initials + dropdown */}
+            <button
+              type="button"
+              className="flex items-center gap-1 cursor-pointer focus:outline-none"
+              onClick={() => console.log("Clicked initials + arrow")}
             >
-              <img
-                src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
-                alt="User Avatar"
-                className="w-full h-full object-cover"
-              />
-            </div>
+              <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-800 text-sm font-semibold uppercase">
+                {admin?.fullName
+                  ?.split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)}
+              </div>
+              <IoMdArrowDropdown className="w-4 h-4 text-gray-600" />
+            </button>
           </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Image Modal */}
-      <ImagePreviewModal
-        imgUrl="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {/* Mobile menu overlay */}
+      {showMobileMenu && (
+        <div className="relative z-50">
+          <MobileMenu handleShowMobileMenu={handleShowMobileMenu} />
+        </div>
+      )}
     </>
   );
 };

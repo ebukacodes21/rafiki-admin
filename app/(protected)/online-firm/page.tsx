@@ -7,7 +7,7 @@ import { useAppSelector } from "@/redux/hooks/useSelectorHook";
 import { selectCurrentUser } from "@/redux/features/auth";
 
 const OnlineFirmEditor = () => {
-  const user = useAppSelector(selectCurrentUser);
+  const admin = useAppSelector(selectCurrentUser);
 
   return (
     <div className="min-h-screen w-full px-6 py-10 bg-gray-50">
@@ -21,7 +21,7 @@ const OnlineFirmEditor = () => {
         </div>
 
         <Link
-          href={`${process.env.NEXT_PUBLIC_FIRM_URL}/684fefb3bdb5a1e63a51b532`}
+          href={`${process.env.NEXT_PUBLIC_FIRM_URL}/${admin?.id}`}
           className="px-4 py-2 rounded-md border text-sm font-medium border-gray-300 text-gray-700 hover:bg-white hover:shadow-sm transition"
           target="_blank"
         >

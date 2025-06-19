@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const tabs = ["Account Settings", "Integrations", "Avaliability"];
 
-const AppointmentPage = () => {
+const SettingsPage = () => {
   const [active, setActive] = useState<string>("Account Settings");
 
   return (
@@ -38,4 +38,4 @@ const AppointmentPage = () => {
   );
 };
 
-export default AppointmentPage;
+export default SettingsPage;

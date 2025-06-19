@@ -85,13 +85,13 @@ const SideMenu = () => {
                 href={path}
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200 ${
                   isActive
-                    ? "bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-md"
+                    ? "bg-gray-200 "
                     : "hover:bg-gray-100"
                 }`}
               >
                 <div
                   className={`p-2 rounded-md text-lg ${
-                    isActive ? "bg-white/20 text-white" : color
+                    isActive ? `${color} bg-gray-200` : color
                   }`}
                 >
                   {icon}

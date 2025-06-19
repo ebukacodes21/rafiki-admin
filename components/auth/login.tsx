@@ -12,11 +12,13 @@ import { FcGoogle } from "react-icons/fc";
 import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { useAppDispatch } from "@/redux/hooks/useSelectorHook";
+import { setUser } from "@/redux/features/auth";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
   const initialEmail = searchParams.get("email") || "";
-
+const dispatch = useAppDispatch()
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [accountExists, setAccountExists] = useState(false);
@@ -55,9 +57,9 @@ export const LoginForm = () => {
 
       if (res && res.data) {
         setAccountExists(true);
-        toast.success("Welcome back! Please enter your password.");
+        toast.success(res.message);
       } else {
-        toast.error("No account found for this email.");
+        toast.error(formatError(res));
       }
     } catch (err) {
       toast.error(formatError(err));
@@ -79,7 +81,7 @@ export const LoginForm = () => {
         toast.error(formatError(result));
         return;
       }
-
+dispatch(setUser(result.admin))
       router.push(routes.DASHBOARD);
     } catch (err) {
       toast.error(formatError(err));

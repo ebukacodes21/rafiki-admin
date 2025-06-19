@@ -1,11 +1,15 @@
 export type User = {
   id: string;
+  fullName: string;
   email: string;
-  isVerified: boolean;
+  phone: string;
+  role: string
+  country: string;
   isOnboarded: boolean;
-  role: string;
-  createdAt: Date;
+  isVerified: boolean;
+  createdAt: string; 
 };
+
 
 export type InitialUserState = {
   isLoading: boolean;
