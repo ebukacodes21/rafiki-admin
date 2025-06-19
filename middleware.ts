@@ -60,5 +60,8 @@ export const config = {
     '/task',
     '/onboard',
     '/online-firm',
+    '/appointments',
+    '/clients',
+    '/settings',
   ],
 };

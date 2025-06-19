@@ -8,6 +8,7 @@ import { ClipLoader } from "react-spinners";
 const CallbackSignup = () => {
   const router = useRouter();
   const [statusMessage, setStatusMessage] = useState("Signing you up with Google...");
+    const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -16,6 +17,7 @@ const CallbackSignup = () => {
 
     if (!token) {
       setStatusMessage("Invalid or missing token. Please try again.");
+       setLoading(false)
       return;
     }
 
@@ -23,12 +25,14 @@ const CallbackSignup = () => {
       .then((result) => {
         if (result?.name === "AxiosError") {
           setStatusMessage(formatError(result));
+           setLoading(false)
           return;
         }
         window.location.href = routes.ONBOARD;
       })
       .catch((error) => {
         setStatusMessage(formatError(error));
+         setLoading(false)
       });
   }, [router]);
 
@@ -36,7 +40,7 @@ const CallbackSignup = () => {
     <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">
      <div className="flex space-x-2">
        <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
-       <ClipLoader loading color="black" size={20}/>
+       <ClipLoader loading={loading} color="black" size={20}/>
      </div>
     </div>
   );

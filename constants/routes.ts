@@ -9,14 +9,12 @@ export const routes = {
   CALLBACK_SIGNIN: "/auth/callback-signin",
 
   ONBOARD: "/onboard",
-  HOME: "/",
-  ABOUT: "/pages/about",
-  PARTNER: "/pages/partner",
-  CORPORATE: "/pages/corporate",
-  INDIVIDUAL: "/pages/individual",
-  SUPPORT: "/",
 
+  HOME: "/",
   DASHBOARD: "/dashboard",
   TASK: "/task",
   ONLINE_FIRM: "/online-firm",
+  APPOINTMENTS: "/appointments",
+  CLIENTS: "/clients",
+  SETTINGS: "/settings",
 };
