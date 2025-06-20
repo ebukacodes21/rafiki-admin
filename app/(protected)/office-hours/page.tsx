@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Schedule, CalenderSettings } from "./components";
+import { Schedule, DiarySettings } from "./components";
 
-const tabs = ["Schedule", "Calender Settings"];
+const tabs = ["Schedule", "Diary Settings"];
 
 const SettingsPage = () => {
   const [active, setActive] = useState<string>("Schedule");
@@ -40,7 +40,7 @@ const SettingsPage = () => {
       {/* Content */}
       <div className="bg-white w-full shadow-xl px-5 py-8 rounded-md border border-gray-200 overflow-x-auto">
         {active === "Schedule" && <Schedule />}
-        {active === "Calender Settings" && <CalenderSettings />}
+        {active === "Diary Settings" && <DiarySettings />}
       </div>
     </div>
   );

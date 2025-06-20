@@ -18,7 +18,7 @@ import { setUser } from "@/redux/features/auth";
 export const LoginForm = () => {
   const searchParams = useSearchParams();
   const initialEmail = searchParams.get("email") || "";
-const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [accountExists, setAccountExists] = useState(false);
@@ -53,7 +53,9 @@ const dispatch = useAppDispatch()
 
     setLoading(true);
     try {
-      const res = await apiCall("/api/findAccount", "POST", { email: email.trim() });
+      const res = await apiCall("/api/findAccount", "POST", {
+        email: email.trim(),
+      });
 
       if (res && res.data) {
         setAccountExists(true);
@@ -81,7 +83,7 @@ const dispatch = useAppDispatch()
         toast.error(formatError(result));
         return;
       }
-dispatch(setUser(result.admin))
+      dispatch(setUser(result.admin));
       router.push(routes.DASHBOARD);
     } catch (err) {
       toast.error(formatError(err));
@@ -124,7 +126,9 @@ dispatch(setUser(result.admin))
 
           {accountExists && (
             <div>
-              <label className="block text-sm font-medium mb-1">Password:</label>
+              <label className="block text-sm font-medium mb-1">
+                Password:
+              </label>
               <div className="flex items-center border border-gray-200 rounded-md">
                 <Input
                   type={isHidden ? "password" : "text"}

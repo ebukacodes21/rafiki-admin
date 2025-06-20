@@ -40,7 +40,7 @@ const CallbackSignin = () => {
         setStatusMessage(formatError(error));
         setLoading(false);
       });
-  }, [router]);
+  }, [router, dispatch]);
 
   return (
     <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">

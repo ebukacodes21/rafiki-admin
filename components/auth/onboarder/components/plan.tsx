@@ -61,7 +61,7 @@ export default function SubscriptionPlans({ onComplete }: PlanProp) {
                   </li>
                 ))}
               </ul>
-              <button onClick={onComplete} className="w-full mt-6 py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-md transition">
+              <button onClick={onComplete} className="w-full cursor-pointer mt-6 py-2 px-4 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-md transition">
                 Select Plan
               </button>
             </div>

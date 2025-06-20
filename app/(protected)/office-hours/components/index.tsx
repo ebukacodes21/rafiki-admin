@@ -1,4 +1,5 @@
 import Schedule from "./schedule";
-import CalenderSettings from "./calender-settings";
+import DiarySettings from "./diary-settings";
+import WeeklyHours from "./weekly";
 
-export { Schedule, CalenderSettings }
+export { Schedule, DiarySettings, WeeklyHours }

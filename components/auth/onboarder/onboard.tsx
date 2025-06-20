@@ -13,13 +13,16 @@ import { useForm } from "react-hook-form";
 import { AdminFormSchema, FirmFormSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useAppDispatch } from "@/redux/hooks/useSelectorHook";
+import { setUser } from "@/redux/features/auth";
 
 const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   const [step, setStep] = useState(0);
   const [started, setStarted] = useState<boolean>(false);
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
   const [selectedPracticeAreas, setSelectedPracticeAreas] = useState<string[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const handleNext = async () => {
     setDirection("forward");
@@ -42,7 +45,7 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
 
     // Only on last step, submit
     if (step === steps.length - 1) {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await apiCall("/api/onboard", "POST", {
           firm: form.getValues(),
@@ -52,12 +55,13 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
 
         if (response.name === "AxiosError") {
           toast.error(formatError(response));
-          setLoading(false)
+          setLoading(false);
           return;
         }
 
-        toast.success(response)
-        onComplete(); 
+        toast.success("onboarding successful");
+        dispatch(setUser(response.admin));
+        onComplete();
       } catch (error) {
         console.error(error);
         toast.error("Something went wrong. Try again.");
