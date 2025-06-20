@@ -9,12 +9,13 @@ import { routes } from "@/constants";
 import axios from "axios";
 import {
   Squares2X2Icon,
-  ClipboardDocumentCheckIcon,
   BuildingOffice2Icon,
   CalendarDaysIcon,
   UsersIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
+  BriefcaseIcon,
+  ScaleIcon,
 } from "@heroicons/react/24/outline";
 
 type HandleShowMobileMenu = {
@@ -36,20 +37,20 @@ const menu: MenuItem[] = [
     color: "bg-indigo-100 text-indigo-600",
   },
   {
-    title: "Tasks",
-    path: routes.TASK,
-    icon: <ClipboardDocumentCheckIcon className="w-5 h-5" />,
+    title: "Service Types",
+    path: routes.SERVICE_TYPES,
+    icon: <ScaleIcon className="w-5 h-5" />,
     color: "bg-teal-100 text-teal-600",
   },
   {
-    title: "Online Firm",
-    path: routes.ONLINE_FIRM,
-    icon: <BuildingOffice2Icon className="w-5 h-5" />,
+    title: "Consultations",
+    path: routes.CONSULTATIONS,
+    icon: <BriefcaseIcon className="w-5 h-5" />,
     color: "bg-yellow-100 text-yellow-600",
   },
   {
-    title: "Appointments",
-    path: routes.APPOINTMENTS,
+    title: "Office Hours",
+    path: routes.OFFICER_HOURS,
     icon: <CalendarDaysIcon className="w-5 h-5" />,
     color: "bg-blue-100 text-blue-600",
   },
@@ -58,6 +59,12 @@ const menu: MenuItem[] = [
     path: routes.CLIENTS,
     icon: <UsersIcon className="w-5 h-5" />,
     color: "bg-green-100 text-green-600",
+  },
+  {
+    title: "Law Firm",
+    path: routes.LAW_FIRM,
+    icon: <BuildingOffice2Icon className="w-5 h-5" />,
+    color: "bg-yellow-100 text-yellow-600",
   },
   {
     title: "Settings",
@@ -106,10 +113,10 @@ export const MobileMenu = ({ handleShowMobileMenu }: HandleShowMobileMenu) => {
       ref={ref}
     >
       <div className="px-5 py-5">
-          <div className="flex items-center mb-6 px-2">
-        <span className="text-xl font-bold text-blue-700">Rafiki</span>
-      </div>
-        <ul className="space-y-4 text-[16px] font-medium">
+        <div className="flex items-center mb-6 px-2">
+          <span className="text-xl font-bold text-blue-700">Rafiki</span>
+        </div>
+        <ul className="space-y-2 text-[16px] font-medium">
           {menu.map((item) => {
             const isActive = pathname === item.path;
             return (

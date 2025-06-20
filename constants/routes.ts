@@ -12,9 +12,10 @@ export const routes = {
 
   HOME: "/",
   DASHBOARD: "/dashboard",
-  TASK: "/task",
-  ONLINE_FIRM: "/online-firm",
-  APPOINTMENTS: "/appointments",
+  SERVICE_TYPES: "/service-types",
+  CONSULTATIONS: "/consultations",
+  OFFICER_HOURS: "/office-hours",
   CLIENTS: "/clients",
+  LAW_FIRM: "/law-firm",
   SETTINGS: "/settings",
 };

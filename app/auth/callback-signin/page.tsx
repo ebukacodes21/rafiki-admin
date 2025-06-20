@@ -4,11 +4,16 @@ import { useRouter } from "next/navigation";
 import { apiCall, formatError } from "@/utils/helper";
 import { routes } from "@/constants";
 import { ClipLoader } from "react-spinners";
+import { useAppDispatch } from "@/redux/hooks/useSelectorHook";
+import { setUser } from "@/redux/features/auth";
 
 const CallbackSignin = () => {
   const router = useRouter();
-  const [statusMessage, setStatusMessage] = useState("Signing you in with Google...");
-      const [loading, setLoading] = useState<boolean>(false)
+  const [statusMessage, setStatusMessage] = useState(
+    "Signing you in with Google..."
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -17,7 +22,7 @@ const CallbackSignin = () => {
 
     if (!token) {
       setStatusMessage("Invalid or missing token. Please try again.");
-            setLoading(false)
+      setLoading(false);
       return;
     }
 
@@ -25,14 +30,15 @@ const CallbackSignin = () => {
       .then((result) => {
         if (result?.name === "AxiosError") {
           setStatusMessage(formatError(result));
-                setLoading(false)
+          setLoading(false);
           return;
         }
+        dispatch(setUser(result.admin))
         window.location.href = routes.DASHBOARD;
       })
       .catch((error) => {
         setStatusMessage(formatError(error));
-              setLoading(false)
+        setLoading(false);
       });
   }, [router]);
 

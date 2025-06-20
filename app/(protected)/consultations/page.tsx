@@ -1,14 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { Upcoming, Pending, Past } from "./components";
 
 const tabs = ["Upcoming", "Pending", "Past"];
 
-const AppointmentPage = () => {
+const ConsultationsPage = () => {
   const [active, setActive] = useState<string>("Upcoming");
 
   return (
-    <main className="w-full">
+    <div className="min-h-screen w-full px-6 py-10 bg-gray-50">
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Consultations</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            View all Firm Consultations
+          </p>
+        </div>
+      </div>
       {/* Header Row */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-10 mb-6 px-1 gap-4">
         {/* Tabs */}
@@ -27,22 +35,15 @@ const AppointmentPage = () => {
             </button>
           ))}
         </div>
-
-        {/* Create Appointment */}
-        <button className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-md transition">
-          <PlusIcon className="w-4 h-4" />
-          New Appointment
-        </button>
       </div>
 
       {/* Content */}
       <div className="bg-white w-full shadow-xl px-5 py-8 rounded-md border border-gray-200 overflow-x-auto">
-        {active === "Upcoming" && <p className="text-gray-700">Upcoming Appointments</p>}
-        {active === "Pending" && <p className="text-gray-700">Pending Approvals</p>}
-        {active === "Past" && <p className="text-gray-700">Past Consultations</p>}
+        {active === "Upcoming" && <Upcoming />}
+        {active === "Pending" && <Pending />}
       </div>
-    </main>
+    </div>
   );
 };
 
-export default AppointmentPage;
+export default ConsultationsPage;

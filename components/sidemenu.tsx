@@ -8,12 +8,13 @@ import { routes } from "@/constants";
 import { apiCall } from "@/utils/helper";
 import {
   Squares2X2Icon,
-  ClipboardDocumentCheckIcon,
+  ScaleIcon,
   BuildingOffice2Icon,
   CalendarDaysIcon,
   UsersIcon,
   Cog6ToothIcon,
-  ArrowRightOnRectangleIcon,
+  PowerIcon,
+  BriefcaseIcon
 } from "@heroicons/react/24/outline";
 
 const menuItems = [
@@ -24,22 +25,22 @@ const menuItems = [
     color: "bg-indigo-100 text-indigo-600",
   },
   {
-    title: "Tasks",
-    path: routes.TASK,
-    icon: <ClipboardDocumentCheckIcon className="w-5 h-5" />,
+    title: "Service Types",
+    path: routes.SERVICE_TYPES,
+    icon: <ScaleIcon className="w-5 h-5" />,
     color: "bg-teal-100 text-teal-600",
   },
   {
-    title: "Online Firm",
-    path: routes.ONLINE_FIRM,
-    icon: <BuildingOffice2Icon className="w-5 h-5" />,
-    color: "bg-yellow-100 text-yellow-600",
+    title: "Consultations",
+    path: routes.CONSULTATIONS, 
+    icon: <BriefcaseIcon className="w-5 h-5" />,
+    color: "bg-blue-100 text-blue-600",
   },
   {
-    title: "Appointments",
-    path: routes.APPOINTMENTS,
+    title: "Office Hours",
+    path: routes.OFFICER_HOURS, 
     icon: <CalendarDaysIcon className="w-5 h-5" />,
-    color: "bg-blue-100 text-blue-600",
+    color: "bg-cyan-100 text-cyan-600",
   },
   {
     title: "Clients",
@@ -48,12 +49,19 @@ const menuItems = [
     color: "bg-green-100 text-green-600",
   },
   {
+    title: "Law Firm",
+    path: routes.LAW_FIRM,
+    icon: <BuildingOffice2Icon className="w-5 h-5" />,
+    color: "bg-yellow-100 text-yellow-600",
+  },
+  {
     title: "Settings",
     path: routes.SETTINGS,
     icon: <Cog6ToothIcon className="w-5 h-5" />,
     color: "bg-pink-100 text-pink-600",
   },
 ];
+
 
 const SideMenu = () => {
   const pathname = usePathname();
@@ -75,7 +83,7 @@ const SideMenu = () => {
       <div className="flex items-center mb-6 px-2">
         <span className="text-xl font-bold text-blue-700">Rafiki</span>
       </div>
-      <ul className="space-y-3 text-sm flex-grow">
+      <ul className="space-y-2 text-sm flex-grow">
         {menuItems.map(({ title, path, icon, color }) => {
           const isActive = pathname === path;
 
@@ -85,13 +93,13 @@ const SideMenu = () => {
                 href={path}
                 className={`flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-200 ${
                   isActive
-                    ? "bg-gray-200 "
+                    ? "bg-gray-100 "
                     : "hover:bg-gray-100"
                 }`}
               >
                 <div
                   className={`p-2 rounded-md text-lg ${
-                    isActive ? `${color} bg-gray-200` : color
+                    isActive ? `${color} bg-gray-100` : color
                   }`}
                 >
                   {icon}
@@ -106,9 +114,9 @@ const SideMenu = () => {
       <div className="pt-6 border-t border-gray-200">
         <button
           onClick={logout}
-          className="flex items-center gap-3 px-4 py-2 w-full rounded-xl hover:bg-red-50 text-red-600 font-semibold transition-all"
+          className="flex items-center cursor-pointer gap-3 px-4 py-2 w-full rounded-xl hover:bg-red-50 text-red-600 font-semibold transition-all"
         >
-          <ArrowRightOnRectangleIcon className="w-5 h-5 text-red-600" />
+          <PowerIcon className="w-5 h-5 text-red-600" />
           <span>Log out</span>
         </button>
       </div>

@@ -1,18 +1,20 @@
 "use client";
 import React, { useState } from "react";
-import { Account, Integration } from "./components";
+import { Schedule, CalenderSettings } from "./components";
 
-const tabs = ["Account Settings", "Integrations"];
+const tabs = ["Schedule", "Calender Settings"];
 
 const SettingsPage = () => {
-  const [active, setActive] = useState<string>("Account Settings");
+  const [active, setActive] = useState<string>("Schedule");
 
   return (
-   <div className="min-h-screen w-full px-6 py-10 bg-gray-50">
+    <div className="min-h-screen w-full px-6 py-10 bg-gray-50">
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Settings</h1>
-          <p className="text-sm text-gray-500 mt-1">Edit your Account settings </p>
+          <h1 className="text-2xl font-bold text-gray-800">Office Hours</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Tailor your avaliablitiy to render legal services
+          </p>
         </div>
       </div>
       {/* Header Row */}
@@ -37,8 +39,8 @@ const SettingsPage = () => {
 
       {/* Content */}
       <div className="bg-white w-full shadow-xl px-5 py-8 rounded-md border border-gray-200 overflow-x-auto">
-        {active === "Account Settings" && <Account />}
-        {active === "Integrations" && <Integration />}
+        {active === "Schedule" && <Schedule />}
+        {active === "Calender Settings" && <CalenderSettings />}
       </div>
     </div>
   );
