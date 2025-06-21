@@ -56,7 +56,7 @@ export const ResetForm = () => {
             backButtonLabel='Back to Login'
             subTitle="Reset your password to regain access to your account"
             topSlot={
-                <h1 className="text-3xl text-start font-bold text-gray-900 px-7 italic">
+                <h1 className="text-3xl text-start font-bold px-7 italic">
                 Rafiki
                 </h1>
             }>
@@ -114,7 +114,7 @@ export const ResetForm = () => {
                         />
                     </div>
 
-                    <Button type='submit' className='w-full bg-gray-900 hover:bg-gray-900 cursor-pointer' disabled={loading}>
+                    <Button type='submit' className='w-full cursor-pointer' disabled={loading}>
                         {loading ? 'Resetting...' : "Reset Password"}
                         <ClipLoader
                             color="#ffffff"

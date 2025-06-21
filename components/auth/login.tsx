@@ -53,7 +53,7 @@ export const LoginForm = () => {
 
     setLoading(true);
     try {
-      const res = await apiCall("/api/findAccount", "POST", {
+      const res = await apiCall("/api/find-account", "POST", {
         email: email.trim(),
       });
 
@@ -105,7 +105,7 @@ export const LoginForm = () => {
       backButtonLabel="New to Rafiki? Get Started"
       backButtonHref={routes.SIGNUP}
       topSlot={
-        <h1 className="text-3xl text-start font-bold text-gray-900 px-7 italic">
+        <h1 className="text-3xl text-start font-bold px-7 italic">
           Rafiki
         </h1>
       }
@@ -137,7 +137,7 @@ export const LoginForm = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="border-0 shadow-none outline-none focus-visible:ring-0"
                 />
-                <div className="cursor-pointer mr-2">
+                <div className="cursor-pointer mr-2 bg-[#262321]">
                   {isHidden ? (
                     <BsEyeSlash onClick={() => setIsHidden(false)} />
                   ) : (
@@ -148,7 +148,7 @@ export const LoginForm = () => {
 
               <Link
                 href={routes.FORGOT}
-                className="text-sm hover:underline text-gray-700 cursor-pointer"
+                className="text-sm hover:underline cursor-pointer"
               >
                 Forgot password?
               </Link>
@@ -159,7 +159,7 @@ export const LoginForm = () => {
         <div className="space-y-2">
           <Button
             type="button"
-            className="w-full bg-gray-800 hover:bg-gray-800 cursor-pointer"
+            className="w-full cursor-pointer"
             onClick={accountExists ? handleLogin : handleContinue}
             disabled={loading || googleLoading}
           >
@@ -180,7 +180,7 @@ export const LoginForm = () => {
 
           <Button
             type="button"
-            className="w-full bg-white hover:bg-white text-black border border-gray-900 cursor-pointer"
+            className="w-full text-black border border-gray-900 cursor-pointer"
             disabled={loading || googleLoading}
             onClick={handleGoogleLogin}
           >

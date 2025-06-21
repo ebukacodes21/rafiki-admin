@@ -13,7 +13,7 @@ const CallbackSignin = () => {
     "Signing you in with Google..."
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -33,7 +33,7 @@ const CallbackSignin = () => {
           setLoading(false);
           return;
         }
-        dispatch(setUser(result.admin))
+        dispatch(setUser(result.admin));
         window.location.href = routes.DASHBOARD;
       })
       .catch((error) => {
@@ -43,11 +43,9 @@ const CallbackSignin = () => {
   }, [router, dispatch]);
 
   return (
-    <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">
-      <div className="flex space-x-2 items-center">
-        <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
-        <ClipLoader loading={loading} color="black" size={20} />
-      </div>
+    <div className="flex space-x-2 items-center">
+      <p className="text-md max-w-md">{statusMessage}</p>
+      <ClipLoader loading={loading} color="black" size={20} />
     </div>
   );
 };

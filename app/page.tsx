@@ -25,7 +25,7 @@ export default function Home() {
     }
 
     try {
-      const result = await apiCall("/api/findAccount", "POST", {
+      const result = await apiCall("/api/find-account", "POST", {
         email: trimmedEmail,
       });
 

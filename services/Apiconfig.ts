@@ -1,16 +1,21 @@
-const api_base_url = process.env.NEXT_PUBLIC_BASE_API_URL!  
+const admin_base_url = process.env.NEXT_PUBLIC_ADMIN_API_URL!
+const firm_base_url = process.env.NEXT_PUBLIC_FIRM_API_URL!  
 
 const ApiConfig = {
-    signup: `${api_base_url}/admin/signup`,
-    signupGoogle: `${api_base_url}/admin/signup-google`,
-    findAccount: `${api_base_url}/admin/find-account`,
-    verify: `${api_base_url}/admin/verify`,
-    login: `${api_base_url}/admin/login`,
-    loginGoogle: `${api_base_url}/admin/login-google`,
-    forgot: `${api_base_url}/admin/forgot`,
-    reset: `${api_base_url}/admin/reset`,
-    upload: `${api_base_url}/admin/upload`,
-    onboard: `${api_base_url}/admin/onboard`,
+    // admin routes
+    signup: `${admin_base_url}/admin/signup`,
+    signupGoogle: `${admin_base_url}/admin/signup-google`,
+    findAccount: `${admin_base_url}/admin/find-account`,
+    verify: `${admin_base_url}/admin/verify`,
+    login: `${admin_base_url}/admin/login`,
+    loginGoogle: `${admin_base_url}/admin/login-google`,
+    forgot: `${admin_base_url}/admin/forgot`,
+    reset: `${admin_base_url}/admin/reset`,
+    upload: `${admin_base_url}/admin/upload`,
+    onboard: `${admin_base_url}/admin/onboard`,
+
+    // admin firm routes
+    getAdminFirm: `${firm_base_url}/firm/admin-firm-private`
 }
 
 export default ApiConfig;

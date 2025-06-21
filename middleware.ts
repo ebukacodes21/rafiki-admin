@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { COOKIE_NAME, routes } from "./constants";
-import { jwtVerify } from 'jose';
+import { jwtVerify } from "jose";
 
-const secret = new TextEncoder().encode(process.env.SECRET_KEY || '');
+const secret = new TextEncoder().encode(process.env.SECRET_KEY || "");
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
@@ -28,12 +28,12 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const {payload} = await jwtVerify(token, secret);
-    if (!payload.isOnboarded && pathname !== routes.ONBOARD) {
+    const { payload } = await jwtVerify(token, secret);
+    if (!payload.isAuth && pathname !== routes.ONBOARD) {
       return NextResponse.redirect(new URL(routes.ONBOARD, request.url));
     }
 
-    if (payload.isOnboarded && pathname === routes.ONBOARD) {
+    if (payload.isAuth && pathname === routes.ONBOARD) {
       return NextResponse.redirect(new URL(routes.DASHBOARD, request.url));
     }
   } catch (err) {
@@ -47,21 +47,21 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/',
-    '/auth/login',
-    '/auth/signup',
-    '/auth/verify',
-    '/auth/forgot',
-    '/auth/reset',
-    '/auth/accounts',
-    '/auth/callback-signup',
-    '/auth/callback-signin',
-    '/dashboard',
-    '/task',
-    '/onboard',
-    '/online-firm',
-    '/appointments',
-    '/clients',
-    '/settings',
+    "/",
+    "/auth/login",
+    "/auth/signup",
+    "/auth/verify",
+    "/auth/forgot",
+    "/auth/reset",
+    "/auth/accounts",
+    "/auth/callback-signup",
+    "/auth/callback-signin",
+    "/dashboard",
+    "/task",
+    "/onboard",
+    "/online-firm",
+    "/appointments",
+    "/clients",
+    "/settings",
   ],
 };

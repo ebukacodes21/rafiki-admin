@@ -1,19 +1,14 @@
-import { LoginForm } from '@/components/auth/login'
-import { routes } from '@/constants'
-import Link from 'next/link'
-import React, { Suspense } from 'react'
+import { LoginForm } from "@/components/auth/login";
+import React, { Suspense } from "react";
 
 const page = () => {
   return (
-    <div className="min-h-screen relative bg-gradient-to-b from-white to-gray-900 flex items-center justify-center">
-       <Link href={routes.HOME} className="absolute top-6 left-6 text-3xl font-bold text-gray-900">
-        Rafiki
-      </Link>
 
-<Suspense fallback={<div>Loading...</div>}>      <LoginForm /></Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        {" "}
+        <LoginForm />
+      </Suspense>
+  );
+};
 
-    </div>
-  )
-}
-
-export default page
+export default page;

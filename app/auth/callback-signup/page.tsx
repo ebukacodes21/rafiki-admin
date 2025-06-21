@@ -7,7 +7,9 @@ import { ClipLoader } from "react-spinners";
 
 const CallbackSignup = () => {
   const router = useRouter();
-  const [statusMessage, setStatusMessage] = useState("Signing you up with Google...");
+  const [statusMessage, setStatusMessage] = useState(
+    "Signing you up with Google..."
+  );
   const [loading, setLoading] = useState(true);
   const [country, setCountry] = useState<string | null>(null);
 
@@ -44,10 +46,13 @@ const CallbackSignup = () => {
         return;
       }
 
-      if (!country) return; 
+      if (!country) return;
 
       try {
-        const result = await apiCall("/api/signup-google", "POST", { token, country });
+        const result = await apiCall("/api/signup-google", "POST", {
+          token,
+          country,
+        });
 
         if (result?.name === "AxiosError") {
           setStatusMessage(formatError(result));
@@ -62,14 +67,12 @@ const CallbackSignup = () => {
     };
 
     trySignup();
-  }, [router, country]); 
+  }, [router, country]);
 
   return (
-    <div className="h-screen bg-gradient-to-b from-white to-gray-900 px-4">
-      <div className="flex space-x-2 items-center">
-        <p className="text-md text-gray-900 max-w-md">{statusMessage}</p>
-        <ClipLoader loading={loading} color="black" size={20} />
-      </div>
+    <div className="flex space-x-2 items-center">
+      <p className="text-md max-w-md">{statusMessage}</p>
+      <ClipLoader loading={loading} color="black" size={20} />
     </div>
   );
 };

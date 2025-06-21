@@ -168,7 +168,7 @@ export const SignupForm = () => {
 
           <Button
             type="submit"
-            className="w-full bg-gray-800 hover:bg-gray-800 cursor-pointer"
+            className="w-full cursor-pointer"
             disabled={loading}
           >
             {loading ? "Creating..." : "Create Rafiki account"}

@@ -10,7 +10,7 @@ import {
   SelectItem,
 } from "../ui/select";
 import Image from "next/image";
-import { FaEnvelope } from "react-icons/fa";
+import { EnvelopeIcon } from "@heroicons/react/24/solid"; 
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "../ui/button";
 import { ClipLoader } from "react-spinners";
@@ -95,11 +95,11 @@ export const AccountForm = () => {
       <div className="space-y-2">
         <Button
           type="submit"
-          className="w-full bg-gray-800 hover:bg-gray-800 cursor-pointer"
+          className="w-full cursor-pointer"
           disabled={loading}
           onClick={() => router.push(routes.SIGNUP)}
         >
-          <FaEnvelope />
+          <EnvelopeIcon />
           Sign up with Email
         </Button>
 

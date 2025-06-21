@@ -25,38 +25,32 @@ export const CardWrapper: React.FC<CardWrapperProps> = ({
   backButtonHref,
   backButtonLabel,
   topSlot,
-  subTitle
+  subTitle,
 }) => {
   return (
     <motion.section
       initial={{ opacity: 0, x: -100 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full"
+      className=""
     >
-      <div className="w-full md:w-1/2 mx-auto">
-        <div className="mt-5 py-5 w-full">
-          <Card>
-            {/* Top branding / dropdown area */}
-            {topSlot && (
-              <div className="flex justify-start mt-6 mb-2">
-                {topSlot}
-              </div>
-            )}
+      <Card className="w-96">
+        {/* Top branding / dropdown area */}
+        {topSlot && (
+          <div className="flex justify-start mt-6 mb-2">{topSlot}</div>
+        )}
 
-            <CardHeader>
-              <Header label={headerLabel} />
-              <p>{subTitle}</p>
-            </CardHeader>
+        <CardHeader>
+          <Header label={headerLabel} />
+          <p className="text-sm">{subTitle}</p>
+        </CardHeader>
 
-            <CardContent>{children}</CardContent>
+        <CardContent>{children}</CardContent>
 
-            <CardFooter>
-              <BackButton label={backButtonLabel} href={backButtonHref!} />
-            </CardFooter>
-          </Card>
-        </div>
-      </div>
+        <CardFooter>
+          <BackButton label={backButtonLabel} href={backButtonHref!} />
+        </CardFooter>
+      </Card>
     </motion.section>
   );
 };

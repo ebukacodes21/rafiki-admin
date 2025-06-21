@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { UserPlusIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  UserPlusIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { MobileMenu } from "./mobile-menu";
 import { useAppSelector } from "@/redux/hooks/useSelectorHook";
 import { selectCurrentUser } from "@/redux/features/auth";
@@ -60,10 +64,10 @@ const Nav = () => {
               onClick={() => console.log("Clicked initials + arrow")}
             >
               <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-800 text-sm font-semibold uppercase">
-               {admin?.fullName
-  ?.split(" ")
-  .map((n) => n[0])
-  .join("")}
+                {admin?.fullName
+                  ?.split(" ")
+                  .map((n) => n[0])
+                  .join("")}
               </div>
               <IoMdArrowDropdown className="w-4 h-4 text-gray-600" />
             </button>

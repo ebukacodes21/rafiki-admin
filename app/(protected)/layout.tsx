@@ -18,7 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       className="w-full min-h-screen flex flex-col bg-[#FAFAFA]"
     >
       <div className="flex flex-1">
-        <aside className="hidden lg:block bg-[#EBEBEB] fixed h-full">
+        <aside className="hidden lg:block bg-[#EBEBEB] fixed h-full border-l border-gray-900">
           <Sidemenu />
         </aside>
 
