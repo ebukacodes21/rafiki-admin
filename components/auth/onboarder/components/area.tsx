@@ -70,30 +70,46 @@ const areas = [
 
 const PracticeAreaStep: FC<PracticeAreaStepProps> = ({ selectedAreas, setSelectedAreas }) => {
   const toggle = (label: string) => {
-    setSelectedAreas(prev =>
-      prev.includes(label) ? prev.filter(area => area !== label) : [...prev, label]
+    setSelectedAreas((prev) =>
+      prev.includes(label)
+        ? prev.filter((area) => area !== label)
+        : [...prev, label]
     );
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto p-6 bg-white rounded-lg shadow">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">Select Your Practice Areas</h2>
-      <div className="flex flex-wrap gap-3">
-        {areas.map(({ label, icon: Icon }) => {
-          const active = selectedAreas.includes(label);
-          return (
-            <button
-              key={label}
-              onClick={() => toggle(label)}
-              type="button"
-              className={`flex items-center space-x-1.5 rounded-full px-3 py-2 text-xs font-medium transition-colors duration-200 ease-in-out
-                ${active ? "bg-black text-white" : "bg-gray-100 text-gray-700 hover:bg-black hover:text-white"}`}
-            >
-              <Icon className={`h-4 w-4 ${active ? "text-white" : "text-gray-500"}`} />
-              <span>{label}</span>
-            </button>
-          );
-        })}
+    <div className="space-y-4 max-w-5xl mx-auto p-4 rounded-lg shadow">
+      <h2 className="text-lg font-semibold">
+        Select Your Practice Areas
+      </h2>
+
+      {/* Scrollable chip cloud */}
+      <div className="max-h-72 overflow-y-auto pr-1">
+        <div className="flex flex-wrap">
+          {areas.map(({ label, icon: Icon }) => {
+            const active = selectedAreas.includes(label);
+            return (
+              <button
+                key={label}
+                onClick={() => toggle(label)}
+                type="button"
+                className={`flex items-center space-x-1 rounded-full px-3 py-1.5 text-[0.7rem] font-medium m-[3px] shadow-sm transition-all
+                  ${
+                    active
+                      ? "bg-black text-white shadow-black/20"
+                      : "bg-gray-100 text-gray-800 hover:bg-black hover:text-white"
+                  }`}
+              >
+                <Icon
+                  className={`h-3.5 w-3.5 ${
+                    active ? "text-white" : "text-gray-500"
+                  }`}
+                />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

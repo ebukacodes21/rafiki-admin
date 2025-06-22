@@ -1,4 +1,4 @@
-import ApiConfig from "@/services/Apiconfig";
+import ApiConfig from "@/services/api-config";
 import axios from "axios";
 import { NextResponse, NextRequest } from 'next/server';
 

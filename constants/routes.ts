@@ -8,7 +8,7 @@ export const routes = {
   CALLBACK_SIGNUP: "/auth/callback-signup",
   CALLBACK_SIGNIN: "/auth/callback-signin",
 
-  ONBOARD: "/onboard",
+  ONBOARD: "/auth/onboard",
 
   HOME: "/",
   DASHBOARD: "/dashboard",

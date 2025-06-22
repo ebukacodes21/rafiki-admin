@@ -104,7 +104,7 @@ export const AccountForm = () => {
         </Button>
 
         <Button
-          className="w-full bg-white hover:bg-white text-black border border-gray-900 cursor-pointer"
+          className="w-full border border-gray-900 cursor-pointer"
           disabled={loading}
           onClick={handleGoogleLogin}
         >

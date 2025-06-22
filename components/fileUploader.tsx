@@ -11,7 +11,7 @@ export const FileUpload: FC<{
 }> = ({ title, onChange, isLoading, message, disabled }) => {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700 flex items-center gap-1">
+      <label className="text-sm font-medium flex items-center gap-1">
         <DocumentArrowUpIcon className="h-5 w-5 text-blue-500" />
         {title}
         <span className="text-red-500">*</span>
@@ -25,7 +25,7 @@ export const FileUpload: FC<{
         <input
           type="file"
           accept=".pdf, .docx, image/jpeg, image/png"
-          className="w-full text-sm text-gray-600 placeholder-gray-400 focus:outline-none"
+          className="w-full text-sm text-gray-900 placeholder-gray-400 focus:outline-none"
           disabled={isLoading || disabled}
           onChange={(e) => {
             const file = e.target.files ? e.target.files[0] : undefined;
@@ -39,7 +39,7 @@ export const FileUpload: FC<{
             <p className="text-sm">{message}</p>
 
       {isLoading && (
-        <div className="flex items-center text-sm text-gray-600 gap-2">
+        <div className="flex items-center text-sm gap-2">
           <ClipLoader loading={isLoading} color="black" size={18} />
           <span>Uploading file...</span>
         </div>

@@ -137,7 +137,7 @@ export const LoginForm = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="border-0 shadow-none outline-none focus-visible:ring-0"
                 />
-                <div className="cursor-pointer mr-2 bg-[#262321]">
+                <div className="cursor-pointer mr-2">
                   {isHidden ? (
                     <BsEyeSlash onClick={() => setIsHidden(false)} />
                   ) : (
@@ -180,7 +180,7 @@ export const LoginForm = () => {
 
           <Button
             type="button"
-            className="w-full text-black border border-gray-900 cursor-pointer"
+            className="w-full border border-gray-900 cursor-pointer"
             disabled={loading || googleLoading}
             onClick={handleGoogleLogin}
           >

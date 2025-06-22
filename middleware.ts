@@ -58,7 +58,7 @@ export const config = {
     "/auth/callback-signin",
     "/dashboard",
     "/task",
-    "/onboard",
+    "/auth/onboard",
     "/online-firm",
     "/appointments",
     "/clients",

@@ -103,11 +103,11 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
   // Plan is the last step (index 2)
   const steps = [
     {
-      title: "Firm Details",
+      title: "Law Firm Details",
       content: <FirmDetailsStep form={form} />,
     },
     {
-      title: "Admin Details",
+      title: "Principal (lawyer) Details",
       content: <AdminDetailsStep form={admin} />,
     },
     {
@@ -153,7 +153,7 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
       backButtonLabel={""}
       backButtonHref="#"
       topSlot={
-        <h1 className="text-3xl text-start font-bold text-gray-900 px-7 italic">
+        <h1 className="text-3xl text-start font-bold px-7 italic">
           Rafiki
         </h1>
       }
@@ -172,7 +172,7 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
           {/* Progress Bar */}
           <div className="mb-4 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gray-500 transition-all duration-300"
+              className="h-full bg-gray-700 transition-all duration-300"
               style={{
                 width: `${((step + 1) / steps.length) * 100}%`,
               }}
@@ -203,7 +203,7 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
             {step > 0 ? (
               <button
                 onClick={handleBack}
-                className="text-sm font-semibold text-gray-600 hover:underline cursor-pointer"
+                className="text-sm font-semibold hover:underline cursor-pointer"
               >
                 Back
               </button>
