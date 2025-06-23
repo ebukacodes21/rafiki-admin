@@ -14,8 +14,8 @@ export async function middleware(request: NextRequest) {
     routes.LOGIN,
     routes.SIGNUP,
     routes.FORGOT,
-    // routes.RESET,
-    // routes.VERIFY,
+    routes.RESET,
+    routes.VERIFY,
     routes.CALLBACK_SIGNIN,
     routes.CALLBACK_SIGNUP,
   ].includes(pathname);

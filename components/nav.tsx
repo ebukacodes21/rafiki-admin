@@ -88,7 +88,7 @@ const MainNav = ({
       <div className="ml-auto flex items-center space-x-4">
         <Button onClick={logout} className="cursor-pointer">
         {loading ? "logging out..." : "Logout"}
-        <ClipLoader loading={loading} color="fff" />
+        <ClipLoader loading={loading} color="fff" size={10}/>
         </Button>
       </div>
     </nav>

@@ -50,7 +50,7 @@ export const Weekly: FC<WeeklyProps> = ({
       <CardHeader>
         <CardTitle>Weekly Hours</CardTitle>
         <CardDescription>
-          Set when you are typically available for meetings.
+          Set when you are available for consultations.
         </CardDescription>
       </CardHeader>
 
@@ -101,18 +101,20 @@ export const Weekly: FC<WeeklyProps> = ({
                   Unavailable
                 </span>
               )}
-              <button
+              <Button
+               size="icon"
+              variant="ghost"
                 onClick={() =>
                   active ? markUnavailable(idx) : toggleDay(idx, true)
                 }
-                className="p-1"
+                className="p-1 cursor-pointer"
               >
                 {active ? (
                   <XMarkIcon className="h-5 w-5 cursor-pointer" />
                 ) : (
                   <PlusIcon className="h-5 w-5 cursor-pointer" />
                 )}
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -217,6 +219,7 @@ export const DateOverride: FC<DataOverrideProp> = ({
               variant="ghost"
               onClick={() => toggleDateOverrideClosed(override.date)}
               aria-label="Remove override"
+              className="cursor-pointer"
             >
               <XMarkIcon className="h-4 w-4" />
             </Button>
