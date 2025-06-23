@@ -86,7 +86,7 @@ const Nav = () => {
   // );
 
     return (
-    <div className="border-b dark:bg-black">
+    <div className="border-b">
       <div className="flex h-16 items-center px-4">
         <div>
           <MainNav className="mx-6" />

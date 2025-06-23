@@ -26,7 +26,7 @@ const MainNav = ({
       try {
         await apiCall("/api/logout", "GET");
         dispatch(logOut());
-        router.push(routes.LOGIN);
+        router.replace(routes.LOGIN);
       } catch (err) {
         console.error("Logout error:", err);
       }
