@@ -38,20 +38,10 @@ export type PaymentProvider = {
   status: string; // e.g., "connected", "disconnected"
 }
 
-export type ServiceType = {
-  id?: string;
-  name: string;
-  description?: string;
-  durationMins: number;
-  locationType: string;
-  isActive: boolean;
-}
-
 export type ServiceBooking = {
   id?: string;
   firmID: string;
   clientID: string;
-  serviceType: ServiceType;
   status: string;
   paymentRef: string;
   bookedAt: string;        
@@ -69,7 +59,6 @@ export type Firm = {
   name?: string;
   weeklyHours: Record<string, TimeRange[]>; 
   dateOverrides?: DateSpecificHours[];
-  serviceTypes?: ServiceType[];
   serviceBookings?: ServiceBooking[];
   category?: string;
   description?: string;

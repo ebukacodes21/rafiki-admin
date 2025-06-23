@@ -43,11 +43,11 @@ const MainNav = ({
       label: "Consultations",
       active: pathName === routes.CONSULTATIONS,
     },
-    // {
-    //   href: routes.OFFICER_HOURS,
-    //   label: "Office Hours",
-    //   active: pathName === routes.OFFICER_HOURS,
-    // },
+    {
+      href: routes.OFFICER_HOURS,
+      label: "Office Hours",
+      active: pathName === routes.OFFICER_HOURS,
+    },
     // {
     //   href: routes.CLIENTS,
     //   label: "Clients",

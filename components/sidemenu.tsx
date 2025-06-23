@@ -25,12 +25,6 @@ const menuItems = [
     color: "bg-indigo-100 text-indigo-600",
   },
   {
-    title: "Service Types",
-    path: routes.SERVICE_TYPES,
-    icon: <ScaleIcon className="w-5 h-5" />,
-    color: "bg-teal-100 text-teal-600",
-  },
-  {
     title: "Consultations",
     path: routes.CONSULTATIONS, 
     icon: <BriefcaseIcon className="w-5 h-5" />,

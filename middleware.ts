@@ -63,6 +63,7 @@ export const config = {
 
     "/dashboard",
     "/consultations",
+    "/office-hours",
     "/settings",
   ],
 };

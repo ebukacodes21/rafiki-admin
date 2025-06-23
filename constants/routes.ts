@@ -7,12 +7,12 @@ export const routes = {
   FORGOT: "/auth/forgot",
   CALLBACK_SIGNUP: "/auth/callback-signup",
   CALLBACK_SIGNIN: "/auth/callback-signin",
+  CALLBACK_CONNECT: "/callback-connect",
 
   ONBOARD: "/auth/onboard",
 
   HOME: "/",
   DASHBOARD: "/dashboard",
-  SERVICE_TYPES: "/service-types",
   CONSULTATIONS: "/consultations",
   OFFICER_HOURS: "/office-hours",
   CLIENTS: "/clients",
