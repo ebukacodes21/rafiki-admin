@@ -8,10 +8,21 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/redux/hooks/useSelectorHook";
+import { selectCurrentFirm } from "@/redux/features/firm";
 
 export default function CalendarSettings() {
+  const firm = useAppSelector(selectCurrentFirm);
   const [loading, setIsLoading] = useState<boolean>(false);
+   const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    if (firm?.diaries?.some(d => d.provider === "google")) {
+      setIsConnected(true);
+    }
+  }, [firm]);
+
   const handleConnect = () => {
     setIsLoading(true);
     const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
@@ -61,12 +72,12 @@ export default function CalendarSettings() {
             onClick={handleConnect}
             className="cursor-pointer"
           >
-            Connect
+            {isConnected ? "Connected" : "Connect"}
           </Button>
         </div>
 
         {/* Outlook Calendar */}
-        <div className="flex items-center justify-between p-4 border rounded-md">
+        {/* <div className="flex items-center justify-between p-4 border rounded-md">
           <div className="flex items-center gap-4">
             <Image src={"/outlook.png"} height={30} width={30} alt="outlook" />
             <div>
@@ -83,7 +94,7 @@ export default function CalendarSettings() {
           >
             Connect
           </Button>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

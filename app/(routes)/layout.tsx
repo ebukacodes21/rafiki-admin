@@ -1,8 +1,9 @@
 import Navbar from "@/components/navbar";
-import { COOKIE_NAME } from "@/constants";
+import { COOKIE_NAME, routes } from "@/constants";
 import ReduxInitializer from "@/redux/hooks/initializer";
 import { Firm } from "@/types/types";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 async function getFirm(): Promise<Firm | null> {
   const baseUrl = process.env.RAFIKI_FIRM_API_URL;
@@ -35,13 +36,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const firm = await getFirm();
-
-  if (!firm) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p>Firm not found.</p>
-      </main>
-    );
+    if (!firm) {
+    redirect(routes.LOGIN);
   }
 
   return (

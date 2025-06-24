@@ -10,7 +10,7 @@ import { routes } from "@/constants";
 import { ClipLoader } from "react-spinners";
 import { ModeToggle } from "../components/toggle";
 import { useAppDispatch } from "@/redux/hooks/useSelectorHook";
-import { logOut, setUser } from "@/redux/features/auth";
+import { logOut } from "@/redux/features/auth";
 
 const MainNav = ({
   className,
@@ -26,6 +26,7 @@ const MainNav = ({
       try {
         await apiCall("/api/logout", "GET");
         dispatch(logOut());
+        toast.success("logged out")
         router.replace(routes.LOGIN);
       } catch (err) {
         console.error("Logout error:", err);

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FC, useEffect } from "react";
 
 type ImageViewerProper = {
@@ -34,7 +35,9 @@ export const ImagePreviewModal: FC<ImageViewerProper> = ({
         className="bg-white p-2 rounded shadow-lg max-w-[90vw] max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
+        <Image
+        height={50}
+        width={50}
           src={imgUrl}
           alt="Profile Preview"
           className="max-w-full max-h-[80vh] object-contain rounded"

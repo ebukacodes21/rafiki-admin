@@ -33,6 +33,7 @@ const authSlice = createSlice({
         logOut(state) {
             state.user = null;
             localStorage.removeItem('rafiki_admin');
+            localStorage.removeItem('admin_firm');
         },
     },
 });

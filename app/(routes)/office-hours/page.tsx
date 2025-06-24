@@ -1,7 +1,10 @@
+"use client"
 import React from "react";
 import OfficeHoursClient from "./components/client";
+import { useRequireAuth } from "../hooks/useAuth";
 
-const page = async ({ params }: { params: any }) => {
+const OfficeHoursPage = () => {
+  useRequireAuth()
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
@@ -11,4 +14,4 @@ const page = async ({ params }: { params: any }) => {
   );
 };
 
-export default page;
+export default OfficeHoursPage;

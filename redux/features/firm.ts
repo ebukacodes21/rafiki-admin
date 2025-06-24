@@ -4,7 +4,7 @@ import { Firm, InitialFirmState } from "@/types/types";
 
 export const initializeFirmFromLocalStorage = () => (dispatch: Dispatch) => {
     if (typeof window === "undefined") return;
-    const storedData = window.localStorage.getItem("admin-firm");
+    const storedData = window.localStorage.getItem("admin_firm");
     let firmInLocalStorage = null;
     try {
         firmInLocalStorage = storedData ? JSON.parse(storedData) : null;
@@ -26,15 +26,11 @@ const firmSlice = createSlice({
     reducers: {
         setFirm(state, payload: PayloadAction<Firm>) {
             state.firm = payload.payload;
-            localStorage.setItem('admin-firm', JSON.stringify(payload.payload));
-        },
-        logOut(state) {
-            state.firm = null;
-            localStorage.removeItem('admin-firm');
+            localStorage.setItem('admin_firm', JSON.stringify(payload.payload));
         },
     },
 });
 
 export const firmReducer = firmSlice.reducer;
-export const { setFirm, logOut } = firmSlice.actions;
+export const { setFirm } = firmSlice.actions;
 export const selectCurrentFirm = (state: RootState) => state.firmReducer.firm;

@@ -15,7 +15,9 @@ const apiConfig = {
     onboard: `${admin_base_url}/admin/onboard`,
 
     // admin firm routes
-    getAdminFirm: `${firm_base_url}/firm/private`
+    getAdminFirm: `${firm_base_url}/firm/private`,
+    connectCalendar: `${firm_base_url}/firm/connect-calendar`,
+    updateAvailability: `${firm_base_url}/firm/update-availability`,
 }
 
 export default apiConfig;

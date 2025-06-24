@@ -1,13 +1,15 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Heading from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import React from "react";
 // import NairaSign from "@/components/ui/naira";
 import { CreditCard, Package } from "lucide-react";
+import { useRequireAuth } from "../hooks/useAuth";
 // import Overview from "@/components/ui/overview";
 
-const DashboardPage = async () => {
-
+const DashboardPage = () => {
+  useRequireAuth();
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

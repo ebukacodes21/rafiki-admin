@@ -10,7 +10,6 @@ export type User = {
   createdAt: string; 
 };
 
-
 export type InitialUserState = {
   isLoading: boolean;
   isError: boolean;
@@ -26,6 +25,13 @@ export type DateSpecificHours = {
   date: string; 
   timeRanges: TimeRange[];
   isClosed: boolean;
+}
+
+export type WeeklyHour = {
+  day: string;
+  open: string;
+  close: string;
+  active: boolean;
 }
 
 export type Billboard = {
@@ -52,6 +58,18 @@ export type ServiceBooking = {
   notes?: string;
 }
 
+export type Diary = {
+  userId: string;          
+  displayName: string;
+  email: string;
+  provider: string;        
+  accessToken: string;
+  refreshToken: string;
+  expiry: string;           
+  calendarId: string;
+  connectedAt: string;     
+};
+
 export type Firm = {
   id?: string;
   adminID?: string;
@@ -66,6 +84,7 @@ export type Firm = {
   location?: string;
   email?: string;
   phone?: string;
+  diaries: Diary[]
   website?: string;
   liveFirm?: string;
   serviceUrl?: string;

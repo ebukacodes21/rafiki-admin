@@ -1,3 +1,4 @@
+import { WeeklyHour } from "@/types/types";
 import axios from "axios";
 
 export const apiCall = async (url: string, method: string, data?: object) => {
@@ -62,4 +63,28 @@ export const generateTimeOptions = () => {
   }
   return times;
 };
+
+export function debounce<T extends (...args: any[]) => any>(func: T, wait: number) {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+export function convertWeeklyHoursToPayload(weeklyHoursArray: WeeklyHour[]) {
+  const result: Record<string, { open: string; close: string }[]> = {};
+
+   weeklyHoursArray.forEach(({ day, open, close, active }) => {
+    const key = day.toUpperCase();
+
+    if (active && open && close) {
+      result[key] = [{ open, close }];
+    } else {
+      result[key] = [];
+    }
+  });
+
+  return result;
+}
 
