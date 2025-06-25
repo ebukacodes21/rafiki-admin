@@ -8,6 +8,8 @@ export type User = {
   isOnboarded: boolean;
   isVerified: boolean;
   createdAt: string; 
+  yearsOfExperience: string;
+  position: string;
 };
 
 export type InitialUserState = {
@@ -103,6 +105,12 @@ export type Firm = {
   createdAt?: string;
   updatedAt?: string;
   practiceAreas?: string[];
+  consultationFee: {
+    amount: number;
+    enabled: boolean;
+    unit: string;
+    currency: string;
+  }
 }
 
 export type InitialFirmState = {

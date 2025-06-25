@@ -6,16 +6,21 @@ import { selectCurrentFirm, setFirm } from "@/redux/features/firm";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { isSameDay } from "date-fns";
 import { DateSpecificHours } from "@/types/types";
-import { DateOverrideBulk, Weekly } from "./weekly";
+import { Availability } from "./availability";
 import CalendarSettings from "./calendar";
 import { useRouter, useSearchParams } from "next/navigation";
-import { apiCall, convertWeeklyHoursToPayload, debounce, formatError } from "@/utils/helper";
+import {
+  apiCall,
+  convertWeeklyHoursToPayload,
+  debounce,
+  formatError,
+} from "@/utils/helper";
 import toast from "react-hot-toast";
 const orderedDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 export default function AvailabilityTabs() {
   const firm = useAppSelector(selectCurrentFirm);
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   const [zones, setZones] = useState<string[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -29,7 +34,7 @@ export default function AvailabilityTabs() {
     }
     return "UTC";
   });
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [weeklyHours, setWeeklyHours] = useState(() => {
     if (!firm?.weeklyHours) return [];
     return orderedDays.map((day) => {
@@ -69,17 +74,17 @@ export default function AvailabilityTabs() {
     if (!firm?.weeklyHours) return;
 
     setWeeklyHours(
-    orderedDays.map((day) => {
-      const ranges = firm.weeklyHours[day] || [];
-      const firstRange = ranges[0];
-      return {
-        day,
-        open: firstRange?.open ?? "",
-        close: firstRange?.close ?? "",
-        active: Boolean(firstRange?.open) && Boolean(firstRange?.close),
-      };
-    })
-  );
+      orderedDays.map((day) => {
+        const ranges = firm.weeklyHours[day] || [];
+        const firstRange = ranges[0];
+        return {
+          day,
+          open: firstRange?.open ?? "",
+          close: firstRange?.close ?? "",
+          active: Boolean(firstRange?.open) && Boolean(firstRange?.close),
+        };
+      })
+    );
   }, [firm]);
 
   const toggleDay = (index: number, value: boolean) => {
@@ -90,7 +95,11 @@ export default function AvailabilityTabs() {
     });
   };
 
-  const updateTime = (index: number, field: "open" | "close", value: string) => {
+  const updateTime = (
+    index: number,
+    field: "open" | "close",
+    value: string
+  ) => {
     setWeeklyHours((prev) => {
       const updated = [...prev];
       updated[index][field] = value;
@@ -101,7 +110,12 @@ export default function AvailabilityTabs() {
   const markUnavailable = (index: number) => {
     setWeeklyHours((prev) => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], active: false, open: "", close: "" };
+      updated[index] = {
+        ...updated[index],
+        active: false,
+        open: "",
+        close: "",
+      };
       return updated;
     });
   };
@@ -148,28 +162,28 @@ export default function AvailabilityTabs() {
     });
   };
 
-const handleSave = useCallback(async () => {
-  if (!firm?.id) return;
-  setLoading(true);
-  const result = await apiCall("/api/update-availability", "PUT", {
-    firmId: firm.id,
-    timeZone,
-    weeklyHours: convertWeeklyHoursToPayload(weeklyHours),
-    dateOverrides,
-  });
+  const handleSave = useCallback(async () => {
+    if (!firm?.id) return;
+    setLoading(true);
+    const result = await apiCall("/api/update-availability", "PUT", {
+      firmId: firm.id,
+      timeZone,
+      weeklyHours: convertWeeklyHoursToPayload(weeklyHours),
+      dateOverrides,
+    });
 
-  if (result.name === "AxiosError") {
+    if (result.name === "AxiosError") {
+      setLoading(false);
+      toast.error(formatError(result));
+      return;
+    }
+
+    toast.success(result.message);
+    dispatch(setFirm(result.data));
     setLoading(false);
-    toast.error(formatError(result));
-    return;  // exit early if error
-  }
+  }, [firm?.id, timeZone, weeklyHours, dateOverrides, dispatch]);
 
-  toast.success(result.message);
-  dispatch(setFirm(result.data));
-  setLoading(false);
-}, [firm?.id, timeZone, weeklyHours, dateOverrides, dispatch]);
-
-const debouncedSave = useMemo(() => debounce(handleSave, 1000), [handleSave]);
+  const debouncedSave = useMemo(() => debounce(handleSave, 1000), [handleSave]);
 
   return (
     <div className="flex w-full max-w-6xl flex-col gap-6 mx-auto mt-8">
@@ -184,11 +198,8 @@ const debouncedSave = useMemo(() => debounce(handleSave, 1000), [handleSave]);
         </TabsList>
 
         <TabsContent
-          value="availability"
-          className="grid grid-cols-1 md:grid-cols-2"
-        >
-          {/* Weekly Hours Card */}
-          <Weekly
+          value="availability">
+          <Availability
             timeZone={timeZone}
             setTimeZone={setTimeZone}
             zones={zones}
@@ -198,15 +209,9 @@ const debouncedSave = useMemo(() => debounce(handleSave, 1000), [handleSave]);
             toggleDay={toggleDay}
             loading={loading}
             onSave={debouncedSave}
-          />
-
-          {/* Date-Specific Hours Card */}
-          <DateOverrideBulk
             selectedDates={selectedDates}
             setSelectedDates={setSelectedDates}
             applyBulkDateOverride={applyBulkDateOverride}
-             loading={loading}
-            onSave={debouncedSave}
           />
         </TabsContent>
 

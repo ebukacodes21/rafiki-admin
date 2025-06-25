@@ -1,22 +1,10 @@
 "use client";
-import React, { FC } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import Heading from "@/components/ui/heading";
-import { Plus } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-// import { CategoryColumn, columns } from "./column";
 import { Separator } from "@/components/ui/separator";
-import { DataTable } from "@/components/ui/data-table";
 import Content from "./content";
 
-type ConsultationsClientProp = {
-  data: [];
-};
-
-const ConsultationsClient: FC<ConsultationsClientProp> = ({ data }) => {
-  const router = useRouter();
-  const params = useParams();
-
+const OfficeHoursClient = () => {
   return (
     <>
       <div className="flex items-center justify-between">
@@ -32,4 +20,4 @@ const ConsultationsClient: FC<ConsultationsClientProp> = ({ data }) => {
   );
 };
 
-export default ConsultationsClient;
+export default OfficeHoursClient;

@@ -13,11 +13,14 @@ const apiConfig = {
     reset: `${admin_base_url}/admin/reset`,
     upload: `${admin_base_url}/admin/upload`,
     onboard: `${admin_base_url}/admin/onboard`,
+    updateAccount: `${admin_base_url}/admin/update-account`,
+    updatePassword: `${admin_base_url}/admin/update-password`,
 
     // admin firm routes
     getAdminFirm: `${firm_base_url}/firm/private`,
     connectCalendar: `${firm_base_url}/firm/connect-calendar`,
     updateAvailability: `${firm_base_url}/firm/update-availability`,
+    updateFee: `${firm_base_url}/firm/update-fee`,
 }
 
 export default apiConfig;

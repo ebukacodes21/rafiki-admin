@@ -93,11 +93,15 @@ export const LoginForm = () => {
   };
 
   useEffect(() => {
-    if (initialEmail) {
+    const trimmedEmail = initialEmail.trim();
+    if (!trimmedEmail) return;
+
+    const debounce = setTimeout(() => {
       handleContinue();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    }, 500);
+
+    return () => clearTimeout(debounce);
+  }, [initialEmail]);
 
   return (
     <CardWrapper
@@ -105,9 +109,7 @@ export const LoginForm = () => {
       backButtonLabel="New to Rafiki? Get Started"
       backButtonHref={routes.SIGNUP}
       topSlot={
-        <h1 className="text-3xl text-start font-bold px-7 italic">
-          Rafiki
-        </h1>
+        <h1 className="text-3xl text-start font-bold px-7 italic">Rafiki</h1>
       }
       subTitle="Continue to Rafiki Account"
     >
@@ -119,7 +121,7 @@ export const LoginForm = () => {
               type="email"
               placeholder="johndoe@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.toLowerCase().trim())}
               disabled={loading || accountExists}
             />
           </div>
@@ -129,20 +131,20 @@ export const LoginForm = () => {
               <label className="block text-sm font-medium mb-1">
                 Password:
               </label>
-              <div className="flex items-center border border-gray-200 rounded-md">
+              <div className="relative">
                 <Input
                   type={isHidden ? "password" : "text"}
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="border-0 shadow-none outline-none focus-visible:ring-0"
+                  className="pr-10"
                 />
-                <div className="cursor-pointer mr-2">
-                  {isHidden ? (
-                    <BsEyeSlash onClick={() => setIsHidden(false)} />
-                  ) : (
-                    <BsEye onClick={() => setIsHidden(true)} />
-                  )}
+                <div
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                  onClick={() => setIsHidden(!isHidden)}
+                  aria-label="toggle password visibility"
+                >
+                  {isHidden ? <BsEyeSlash /> : <BsEye />}
                 </div>
               </div>
 
@@ -184,10 +186,8 @@ export const LoginForm = () => {
             disabled={loading || googleLoading}
             onClick={handleGoogleLogin}
           >
-            <>
-              <FcGoogle />
-              Log in with Google
-            </>
+            <FcGoogle />
+            Log in with Google
           </Button>
         </div>
       </div>

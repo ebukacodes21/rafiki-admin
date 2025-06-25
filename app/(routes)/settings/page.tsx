@@ -1,21 +1,17 @@
 "use client"
-import React, { FC } from 'react'
-import { cookies } from 'next/headers'
-import { COOKIE_NAME, routes } from '@/constants'
-import { redirect } from 'next/navigation'
-import axios from 'axios'
-import SettingsForm from './components/settings-form'
+import React from 'react'
+import SettingsClient from './components/client'
 import { useRequireAuth } from '../hooks/useAuth'
 
-const SettingPage = () => {
-useRequireAuth()
+const SettingsPage = () => {
+  useRequireAuth()
   return (
-    <div className='flex-col'>
-      <div className='flex-1 space-y-4 p-8 pt-6'>
-        <SettingsForm />
+    <div className="flex-col">
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <SettingsClient />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SettingPage;
+export default SettingsPage;

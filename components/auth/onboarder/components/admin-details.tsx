@@ -59,7 +59,7 @@ const fieldGroups: Array<
 ];
 
 const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
-  const { register, formState: { errors }, setValue } = form;
+  const { register, formState: { errors } } = form;
 
   const [currentStep, setCurrentStep] = useState(0);
   const [isUploaded, setIsUploaded] = useState(false);

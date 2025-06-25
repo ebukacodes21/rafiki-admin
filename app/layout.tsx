@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import ReduxProvider from "@/redux/hooks/reduxProvider";
 import { ThemeProvider } from "@/redux/hooks/themeProvider";
+import { Inter } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -27,19 +22,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ReduxProvider>
-      <html lang="en">
-        <head>
-          <Script
-            src="https://accounts.google.com/gsi/client"
-            async
-            defer
-            strategy="beforeInteractive"
-          />
-        </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en">
+      <body
+        className={`${inter.variable} antialiased`}
+      >
+        <ReduxProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -49,8 +36,8 @@ export default async function RootLayout({
             <Toaster position="top-center" />
             {children}
           </ThemeProvider>
-        </body>
-      </html>
-    </ReduxProvider>
+        </ReduxProvider>
+      </body>
+    </html>
   );
 }
