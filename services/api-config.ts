@@ -15,6 +15,7 @@ const apiConfig = {
     onboard: `${admin_base_url}/admin/onboard`,
     updateAccount: `${admin_base_url}/admin/update-account`,
     updatePassword: `${admin_base_url}/admin/update-password`,
+    invite: `${admin_base_url}/admin/add-admin`,
 
     // admin firm routes
     getAdminFirm: `${firm_base_url}/firm/private`,

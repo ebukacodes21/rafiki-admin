@@ -21,6 +21,7 @@ import { useSearchParams } from 'next/navigation';
 import { BsEyeSlash, BsEye } from 'react-icons/bs';
 import { apiCall, formatError } from '@/utils/helper';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 export const ResetForm = () => {
     const [isHidden, setIsHidden] = useState<boolean>(true);
@@ -55,11 +56,9 @@ export const ResetForm = () => {
             backButtonHref={routes.LOGIN}
             backButtonLabel='Back to Login'
             subTitle="Reset your password to regain access to your account"
-            topSlot={
-                <h1 className="text-3xl text-start font-bold px-7 italic">
-                Rafiki
-                </h1>
-            }>
+                topSlot={
+        <Link href={routes.HOME} className="text-3xl text-start font-bold px-7 italic">Rafiki</Link>
+      }>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}

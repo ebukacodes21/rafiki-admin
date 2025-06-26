@@ -7,31 +7,8 @@ import { ClipLoader } from "react-spinners";
 
 const CallbackSignup = () => {
   const router = useRouter();
-  const [statusMessage, setStatusMessage] = useState(
-    "Signing you up with Google..."
-  );
+  const [statusMessage, setStatusMessage] = useState("Signing you up with Google...");
   const [loading, setLoading] = useState(true);
-  const [country, setCountry] = useState<string | null>(null);
-
-  // Get country
-  useEffect(() => {
-    const fetchCountry = async () => {
-      try {
-        const response = await fetch("https://ip-api.io/api/v1/ip");
-        const data = await response.json();
-        if (data.location?.country) {
-          setCountry(data.location.country);
-        } else {
-          setCountry("Unknown");
-        }
-      } catch (error) {
-        console.error("Error fetching country:", error);
-        setCountry("Unknown");
-      }
-    };
-
-    fetchCountry();
-  }, []);
 
   // Signup logic
   useEffect(() => {
@@ -46,14 +23,8 @@ const CallbackSignup = () => {
         return;
       }
 
-      if (!country) return;
-
       try {
-        const result = await apiCall("/api/signup-google", "POST", {
-          token,
-          country,
-        });
-
+        const result = await apiCall("/api/signup-google", "POST", { token });
         if (result?.name === "AxiosError") {
           setStatusMessage(formatError(result));
         } else {
@@ -67,7 +38,7 @@ const CallbackSignup = () => {
     };
 
     trySignup();
-  }, [router, country]);
+  }, [router]);
 
   return (
     <div className="flex space-x-2 items-center">

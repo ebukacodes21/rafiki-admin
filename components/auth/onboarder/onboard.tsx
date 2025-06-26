@@ -107,7 +107,7 @@ const OnboardComponent = ({ onComplete }: { onComplete: () => void }) => {
       content: <FirmDetailsStep form={form} />,
     },
     {
-      title: "Principal (Lawyer) Details",
+      title: "Lawyer Details",
       content: <AdminDetailsStep form={admin} />,
     },
     {

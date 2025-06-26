@@ -49,6 +49,7 @@ export const AdminFormSchema = z.object({
   enrollNumber: z.string().min(1, "Enrollment number is required"),
   yearsOfExperience: z.string().regex(/^\d+$/, { message: "Must be a number" }),
   lawSchool: z.string().min(1, "Law school is required"),
+  country: z.string().min(1, "country is required"),
   document: z
     .string({
       required_error: "Please upload a document",

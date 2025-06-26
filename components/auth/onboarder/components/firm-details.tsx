@@ -7,7 +7,11 @@ import { FirmFormSchema } from "@/schema";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 import {
@@ -44,24 +48,85 @@ const fieldGroups: Array<
   }>
 > = [
   [
-    { label: "Firm Name", name: "firmName", placeholder: "Rafiki Legal Group", Icon: BuildingOfficeIcon, iconColor: "text-indigo-500" },
-    { label: "Tagline", name: "tagline", placeholder: "Justice, simplified.", Icon: ChatBubbleBottomCenterTextIcon, iconColor: "text-gray-500" },
+    {
+      label: "Firm Name",
+      name: "firmName",
+      placeholder: "Rafiki Legal Group",
+      Icon: BuildingOfficeIcon,
+      iconColor: "text-indigo-500",
+    },
+    {
+      label: "Tagline",
+      name: "tagline",
+      placeholder: "Justice, simplified.",
+      Icon: ChatBubbleBottomCenterTextIcon,
+      iconColor: "text-gray-500",
+    },
   ],
   [
-    { label: "Website", name: "website", placeholder: "https://yourfirm.com", Icon: GlobeAltIcon, iconColor: "text-blue-500" },
-    { label: "Location", name: "location", placeholder: "Nairobi, Kenya", Icon: MapPinIcon, iconColor: "text-red-500" },
+    {
+      label: "Website",
+      name: "website",
+      placeholder: "https://yourfirm.com",
+      Icon: GlobeAltIcon,
+      iconColor: "text-blue-500",
+    },
+    {
+      label: "Location",
+      name: "location",
+      placeholder: "Nairobi, Kenya",
+      Icon: MapPinIcon,
+      iconColor: "text-red-500",
+    },
   ],
   [
-    { label: "Email", name: "email", placeholder: "contact@rafiki.legal", Icon: EnvelopeIcon, iconColor: "text-yellow-500" },
-    { label: "Phone", name: "phone", placeholder: "+254 712 345678", Icon: PhoneIcon, iconColor: "text-green-500" },
+    {
+      label: "Email",
+      name: "email",
+      placeholder: "contact@rafiki.legal",
+      Icon: EnvelopeIcon,
+      iconColor: "text-yellow-500",
+    },
+    {
+      label: "Phone",
+      name: "phone",
+      placeholder: "+254 712 345678",
+      Icon: PhoneIcon,
+      iconColor: "text-green-500",
+    },
   ],
   [
-    { label: "Date Founded", name: "founded", placeholder: "2021-04-15", Icon: CalendarIcon, type: "date", iconColor: "text-purple-500" },
-    { label: "Instagram", name: "instagram", placeholder: "https://instagram.com/yourfirm", Icon: FaInstagram, iconColor: "text-pink-500" },
+    {
+      label: "Date Founded",
+      name: "founded",
+      placeholder: "2021-04-15",
+      Icon: CalendarIcon,
+      type: "date",
+      iconColor: "text-purple-500",
+    },
+    {
+      label: "Instagram",
+      name: "instagram",
+      placeholder: "https://instagram.com/yourfirm",
+      Icon: FaInstagram,
+      iconColor: "text-pink-500",
+    },
   ],
   [
-    { label: "X (Twitter)", name: "x", placeholder: "https://x.com/yourfirm", Icon: FaTwitter, iconColor: "text-blue-400" },
-    { label: "Facebook", name: "facebook", placeholder: "https://facebook.com/yourfirm", Icon: FaFacebook, iconColor: "text-blue-700" },
+    {
+      label: "X (Twitter)",
+      name: "x",
+      placeholder: "https://x.com/yourfirm",
+      Icon: FaTwitter,
+      iconColor: "text-blue-400",
+    },
+    {
+      label: "Facebook",
+      name: "facebook",
+      placeholder: "https://facebook.com/yourfirm",
+      Icon: FaFacebook,
+      iconColor: "text-blue-700",
+    },
   ],
 ];
 
@@ -124,19 +189,29 @@ const FirmDetailsStep: FC<FirmDetailsStepProps> = ({ form }) => {
                 )}
               >
                 <Icon className={`h-5 w-5 mr-2 ${iconColor}`} />
-                {selectedDate ? format(selectedDate, "PPP") : <span className="text-gray-400">{placeholder}</span>}
+                {selectedDate ? (
+                  format(selectedDate, "PPP")
+                ) : (
+                  <span className="text-gray-400">{placeholder}</span>
+                )}
               </button>
             </PopoverTrigger>
             <PopoverContent className="p-0" align="start">
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={(date) => setValue(name, date?.toISOString().split("T")[0] ?? "")}
+                onSelect={(date) => {
+                  if (!date) return;
+                  const localDate = date.toLocaleDateString("en-CA");
+                  setValue(name, localDate);
+                }}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
-          {error && <p className="text-xs text-red-600">{error.message as string}</p>}
+          {error && (
+            <p className="text-xs text-red-600">{error.message as string}</p>
+          )}
         </div>
       );
     }
@@ -146,7 +221,11 @@ const FirmDetailsStep: FC<FirmDetailsStepProps> = ({ form }) => {
         <Label className="text-sm font-medium">
           {label} {isRequired && <span className="text-red-500">*</span>}
         </Label>
-        <div className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${error ? "border-red-500" : "focus-within:ring-black"}`}>
+        <div
+          className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${
+            error ? "border-red-500" : "focus-within:ring-black"
+          }`}
+        >
           <Icon className={`h-5 w-5 mr-2 ${iconColor}`} />
           <Input
             type={type}
@@ -155,7 +234,9 @@ const FirmDetailsStep: FC<FirmDetailsStepProps> = ({ form }) => {
             className="w-full border-none outline-none text-md placeholder:text-gray-400"
           />
         </div>
-        {error && <p className="text-xs text-red-600">{error.message as string}</p>}
+        {error && (
+          <p className="text-xs text-red-600">{error.message as string}</p>
+        )}
       </div>
     );
   };

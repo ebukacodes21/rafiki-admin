@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CardWrapper } from "@/components/card-wrapper";
 import { Input } from "@/components/ui/input";
@@ -45,7 +45,7 @@ export const LoginForm = () => {
     window.location.href = googleOAuthURL;
   };
 
-  const handleContinue = async () => {
+  const handleContinue = useCallback(async () => {
     if (!email || email.trim() === "") {
       toast.error("Email address is required");
       return;
@@ -68,7 +68,7 @@ export const LoginForm = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [email, setLoading, setAccountExists]);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -101,7 +101,7 @@ export const LoginForm = () => {
     }, 500);
 
     return () => clearTimeout(debounce);
-  }, [initialEmail]);
+  }, [initialEmail, handleContinue]);
 
   return (
     <CardWrapper
@@ -109,7 +109,12 @@ export const LoginForm = () => {
       backButtonLabel="New to Rafiki? Get Started"
       backButtonHref={routes.SIGNUP}
       topSlot={
-        <h1 className="text-3xl text-start font-bold px-7 italic">Rafiki</h1>
+        <Link
+          href={routes.HOME}
+          className="text-3xl text-start font-bold px-7 italic"
+        >
+          Rafiki
+        </Link>
       }
       subTitle="Continue to Rafiki Account"
     >

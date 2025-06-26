@@ -23,7 +23,7 @@ export default function CalendarSettings() {
     }
   }, [firm]);
 
-  const handleConnect = () => {
+  const handleGoogleCalendar = () => {
     setIsLoading(true);
     const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
     const REDIRECT_URI = process.env.NEXT_PUBLIC_CALLBACK_CONNECT!;
@@ -69,15 +69,15 @@ export default function CalendarSettings() {
           </div>
           <Button
             disabled={loading}
-            onClick={handleConnect}
+            onClick={handleGoogleCalendar}
             className="cursor-pointer"
           >
-            {isConnected ? "Connected" : "Connect"}
+            {isConnected ? "Connected" : "Disconnect"}
           </Button>
         </div>
 
         {/* Outlook Calendar */}
-        {/* <div className="flex items-center justify-between p-4 border rounded-md">
+        <div className="flex items-center justify-between p-4 border rounded-md">
           <div className="flex items-center gap-4">
             <Image src={"/outlook.png"} height={30} width={30} alt="outlook" />
             <div>
@@ -88,13 +88,13 @@ export default function CalendarSettings() {
             </div>
           </div>
           <Button
-            onClick={handleConnect}
+            onClick={handleGoogleCalendar}
             disabled={loading}
             className="cursor-pointer"
           >
             Connect
           </Button>
-        </div> */}
+        </div>
       </CardContent>
     </Card>
   );

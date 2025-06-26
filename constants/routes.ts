@@ -15,6 +15,7 @@ export const routes = {
   DASHBOARD: "/dashboard",
   CONSULTATIONS: "/consultations",
   OFFICER_HOURS: "/office-hours",
+  MATTERS: "/matters",
   CLIENTS: "/clients",
   LAW_FIRM: "/law-firm",
   SETTINGS: "/settings",

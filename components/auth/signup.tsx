@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CardWrapper } from "@/components/card-wrapper";
-import { routes, countryList } from "@/constants";
+import { routes } from "@/constants";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,19 +20,11 @@ import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { apiCall, formatError } from "@/utils/helper";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoginSchema } from "@/schema";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import Image from "next/image";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export const SignupForm = () => {
   const [isHidden, setIsHidden] = useState<boolean>(true);
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
   const [loading, setIsLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
@@ -50,7 +42,7 @@ export const SignupForm = () => {
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setIsLoading(true);
-    const result = await apiCall("/api/signup", "POST", {...values, country: selectedCountry});
+    const result = await apiCall("/api/signup", "POST", values);
 
     if (result.name === "AxiosError") {
       toast.error(formatError(result));
@@ -63,21 +55,21 @@ export const SignupForm = () => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const fetchCountry = async () => {
-      try {
-        const response = await fetch("https://ip-api.io/api/v1/ip");
-        const data = await response.json();
-        if (data.location.country) {
-          setSelectedCountry(data.location.country);
-        }
-      } catch (error) {
-        console.error("Error fetching country:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCountry = async () => {
+  //     try {
+  //       const response = await fetch("https://ip-api.io/api/v1/ip");
+  //       const data = await response.json();
+  //       if (data.location.country) {
+  //         setSelectedCountry(data.location.country);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching country:", error);
+  //     }
+  //   };
 
-    fetchCountry();
-  }, []);
+  //   fetchCountry();
+  // }, []);
 
   return (
     <CardWrapper
@@ -86,34 +78,7 @@ export const SignupForm = () => {
       subTitle="Get 7 days free, then 3 months for $1/month"
       backButtonHref={routes.LOGIN}
       topSlot={
-        <div className="w-full flex justify-start">
-          <div className="px-7">
-            <Select
-              value={selectedCountry}
-              onValueChange={(value) => setSelectedCountry(value)}
-            >
-              <SelectTrigger className="w-full rounded-md border border-gray-300 px-4 py-2 bg-white cursor-pointer">
-                <SelectValue placeholder="Select country" />
-              </SelectTrigger>
-              <SelectContent>
-                {countryList.map((country) => (
-                  <SelectItem key={country.id} value={country.name}>
-                    <div className="flex items-center gap-2 justify-start">
-                      <Image
-                        src={`data:image/png;base64,${country.flag}`}
-                        alt={country.name}
-                        width={20}
-                        height={15}
-                        className="rounded-sm"
-                      />
-                      <span>{country.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <Link href={routes.HOME} className="text-3xl text-start font-bold px-7 italic">Rafiki</Link>
       }
     >
       <Form {...form}>

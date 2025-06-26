@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ClipLoader } from "react-spinners";
 import { apiCall, formatError } from "@/utils/helper";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export const ForgotForm = () => {
   const [loading, setIsLoading] = useState<boolean>(false);
@@ -51,9 +52,7 @@ export const ForgotForm = () => {
       backButtonHref={routes.LOGIN}
       subTitle="Please enter the email address associated with your account. A password reset link will be sent to you."
       topSlot={
-        <h1 className="text-3xl text-start font-bold px-7 italic">
-          Rafiki
-        </h1>
+        <Link href={routes.HOME} className="text-3xl text-start font-bold px-7 italic">Rafiki</Link>
       }
     >
       <Form {...form}>

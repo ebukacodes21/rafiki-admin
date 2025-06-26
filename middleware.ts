@@ -64,6 +64,7 @@ export const config = {
     "/dashboard",
     "/consultations",
     "/office-hours",
+    "/matters",
     "/settings",
   ],
 };
