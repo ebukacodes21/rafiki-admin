@@ -23,6 +23,7 @@ const apiConfig = {
     updateAvailability: `${firm_base_url}/firm/update-availability`,
     updateFee: `${firm_base_url}/firm/update-fee`,
     invite: `${firm_base_url}/firm/invite-lawyers`,
+    connectPayment: `${firm_base_url}/firm/connect-payment`,
 }
 
 export default apiConfig;

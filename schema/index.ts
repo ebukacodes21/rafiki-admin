@@ -73,7 +73,7 @@ export const PaystackConnectSchema = z.object({
     .min(10, "Account number must be 10 digits")
     .max(10, "Account number must be 10 digits")
     .regex(/^\d+$/, "Account number must be numeric"),
-  bankCode: z.string().min(1, "Bank is required"),
+  bank: z.string().min(1, "Bank is required"),
   charge: z
     .union([
       z.string().regex(/^\d+$/, "Percentage must be a number"),
@@ -81,6 +81,7 @@ export const PaystackConnectSchema = z.object({
     ])
     .optional(),
   accountName: z.string().optional(),
+  country: z.string().optional()
 });
 
 export const UpdatePasswordSchema = z.object({

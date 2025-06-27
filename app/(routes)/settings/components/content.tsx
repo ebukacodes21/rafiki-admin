@@ -22,17 +22,6 @@ const SettingsTabs = () => {
   const admin = useAppSelector(selectCurrentUser);
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const paystackForm = useForm<z.infer<typeof PaystackConnectSchema>>({
-    resolver: zodResolver(PaystackConnectSchema),
-    defaultValues: {
-      firmName: firm?.name,
-      bankCode: "",
-      accountNumber: "",
-      charge: 0,
-      accountName: "",
-    },
-  });
-
   const accountForm = useForm<z.infer<typeof UpdateFormSchema>>({
     resolver: zodResolver(UpdateFormSchema),
     defaultValues: {
@@ -91,7 +80,7 @@ const SettingsTabs = () => {
         isOpen={showModal}
         onClose={() => {}}
       >
-        <PaystackForm form={paystackForm} onClose={() => setShowModal(false)} />
+        <PaystackForm onClose={() => setShowModal(false)} />
       </Modal>
     </div>
   );

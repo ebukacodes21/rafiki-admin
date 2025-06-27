@@ -22,7 +22,7 @@ export default function PaymentMethod({ onConnectPaystack }: PaymentMethodProp) 
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (firm?.diaries?.some((d) => d.provider === "google")) {
+    if (firm?.paymentProviders?.some((d) => d.name === "paystack")) {
       setIsConnected(true);
     }
   }, [firm]);
@@ -76,7 +76,7 @@ export default function PaymentMethod({ onConnectPaystack }: PaymentMethodProp) 
             onClick={onConnectPaystack}
             className="cursor-pointer"
           >
-            {isConnected ? "Connected" : "Connect"}
+            {isConnected ? "Disconnect" : "Connect"}
           </Button>
         </div>
 
@@ -92,7 +92,7 @@ export default function PaymentMethod({ onConnectPaystack }: PaymentMethodProp) 
             disabled={loading}
             className="cursor-pointer"
           >
-            {isConnected ? "Connected" : "Connect"}
+            {isConnected ? "Disconnect" : "Connect"}
           </Button>
         </div>
       </CardContent>

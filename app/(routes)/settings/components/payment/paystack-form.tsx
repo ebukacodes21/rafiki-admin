@@ -1,237 +1,299 @@
 "use client";
 
 import { FC, useState, useEffect } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
+import toast from "react-hot-toast";
+import {
+  GlobeAltIcon,
+  BanknotesIcon,
+  IdentificationIcon,
+} from "@heroicons/react/24/outline";
+import { apiCall, formatError } from "@/utils/helper";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import toast from "react-hot-toast";
-import { apiCall, formatError } from "@/utils/helper";
-import { useAppSelector } from "@/redux/hooks/useSelectorHook";
-import { selectCurrentFirm } from "@/redux/features/firm";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/useSelectorHook";
+import { selectCurrentFirm, setFirm } from "@/redux/features/firm";
 
-interface PaystackFormType {
+interface FormType {
+  country: string;
+  bank: string;
   accountNumber: string;
-  bankCode: string;
 }
 
-interface PaystackFormProps {
-  form: UseFormReturn<PaystackFormType>;
-  onClose: () => void;
-}
-
-const requiredFields: (keyof PaystackFormType)[] = [
-  "accountNumber",
-  "bankCode",
-];
-
-const PaystackForm: FC<PaystackFormProps> = ({ form, onClose }) => {
+const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
+  const firm = useAppSelector(selectCurrentFirm);
+  const dispatch = useAppDispatch()
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    setValue,
     watch,
-  } = form;
-  const firm = useAppSelector(selectCurrentFirm);
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<FormType>();
+
+  const [countries, setCountries] = useState<
+    { name: string; iso_code: string }[]
+  >([]);
   const [banks, setBanks] = useState<{ name: string; code: string }[]>([]);
-  const [loadingBanks, setLoadingBanks] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string | null>(null);
+  const [loadingCountries, setLoadingCountries] = useState(false);
+  const [loadingBanks, setLoadingBanks] = useState(false);
   const [resolving, setResolving] = useState(false);
 
-  const selectedBankCode = watch("bankCode");
+  const selectedCountry = watch("country");
+  const selectedBankCode = watch("bank");
   const accountNumber = watch("accountNumber");
 
+  // fetch countries on mount
   useEffect(() => {
-    async function fetchBanks() {
-      setLoadingBanks(true);
-      const res = await apiCall("/api/get-banks?country=nigeria", "GET");
-      if (res.name === "AxiosError") {
-        setLoadingBanks(false);
-        toast.error(formatError(res));
-        return;
-      }
-
-      setBanks(res.data);
-      setLoadingBanks(false);
-    }
-    fetchBanks();
+    setLoadingCountries(true);
+    apiCall("/api/get-countries", "GET")
+      .then((res) => {
+        if (res.name === "AxiosError") throw new Error(formatError(res));
+        setCountries(res.data);
+      })
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoadingCountries(false));
   }, []);
 
+  // fetch banks when country changes
+  useEffect(() => {
+    if (!selectedCountry) {
+      setBanks([]);
+      return;
+    }
+    setLoadingBanks(true);
+    apiCall(
+      `/api/get-banks?country=${encodeURIComponent(selectedCountry)}`,
+      "GET"
+    )
+      .then((res) => {
+        if (res.name === "AxiosError") throw new Error(formatError(res));
+        setBanks(res.data);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+        setBanks([]);
+      })
+      .finally(() => setLoadingBanks(false));
+  }, [selectedCountry]);
+
+  // resolve account name when accountNumber and bank are valid
   useEffect(() => {
     if (accountNumber?.length === 10 && selectedBankCode) {
-      const resolveAccount = async () => {
-        setResolving(true);
-        try {
-          const res = await apiCall(
-            `/api/verify-account?account_number=${accountNumber}&bank_code=${selectedBankCode}`,
-            "GET"
-          );
-
+      setResolving(true);
+      apiCall(
+        `/api/verify-account?account_number=${accountNumber}&bank_code=${selectedBankCode}`,
+        "GET"
+      )
+        .then((res) => {
           if (res.status === true && res.data?.account_name) {
             setAccountName(res.data.account_name);
           } else {
-            setAccountName(null);
             toast.error("Unable to resolve account");
+            setAccountName(null);
           }
-        } catch (error) {
-          setAccountName(null);
+        })
+        .catch(() => {
           toast.error("Failed to resolve account");
-        } finally {
-          setResolving(false);
-        }
-      };
-
-      resolveAccount();
+          setAccountName(null);
+        })
+        .finally(() => setResolving(false));
     } else {
       setAccountName(null);
     }
   }, [accountNumber, selectedBankCode]);
 
-  const InputField = ({
-    label,
-    name,
-    placeholder,
-    type = "text",
-  }: {
-    label: string;
-    name: keyof PaystackFormType;
-    placeholder: string;
-    type?: string;
-  }) => {
-    const error = errors[name];
-    const isRequired = requiredFields.includes(name);
-
-    return (
-      <div className="space-y-1">
-        <Label className="text-sm font-medium">
-          {label} {isRequired && <span className="text-red-500">*</span>}
-        </Label>
-        <Input
-          type={type}
-          placeholder={placeholder}
-          {...register(name)}
-          className={`w-full border ${
-            error ? "border-red-500" : "border-gray-300"
-          } rounded-md px-3 py-2 text-sm`}
-        />
-        {error && (
-          <p className="text-xs text-red-600">{error.message as string}</p>
-        )}
-      </div>
-    );
-  };
-
-  const onSubmit = async (data: PaystackFormType) => {
-    try {
-      console.log("Submitting Paystack form:", data);
-      // You can also send accountName if needed
-      toast.success("Paystack details submitted successfully");
-      onClose();
-    } catch (error) {
-      toast.error("Failed to submit Paystack details");
+  // handle form submission
+  const onSubmit: SubmitHandler<FormType> = async (data) => {
+    if (!accountName) {
+      toast.error("Please resolve the account name");
+      return;
     }
+
+    setLoading(true)
+    const result = await apiCall("/api/connect-paystack", "POST", {
+      firmName: firm?.name,
+      bankCode: data.bank,
+      accountNumber: data.accountNumber,
+    });
+    
+    if (result.name === "AxiosError") {
+      setLoading(false)
+      toast.error(formatError(result))
+      onClose();
+      return
+    }
+
+    toast.success(result.message)
+    dispatch(setFirm(result.data))
+    setLoading(false)
+    onClose()
   };
 
   const uniqueBanks = Array.from(
-    new Map(banks.map((bank) => [bank.code, bank])).values()
+    new Map(banks.map((b) => [b.code, b])).values()
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="space-y-1">
-          <Label className="text-sm font-medium">Firm Name</Label>
-          <Input
-            type="text"
-            value={firm?.name}
-            disabled
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100"
-          />
-        </div>
-
-        {/* Bank Select */}
-        <div className="space-y-1">
-          <Label className="text-sm font-medium">
-            Bank <span className="text-red-500">*</span>
-          </Label>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 max-w-md mx-auto p-4"
+    >
+      {/* Country */}
+      <div>
+        <label className="block mb-1 font-medium">
+          Country <span className="text-red-600">*</span>
+        </label>
+        <div
+          className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${
+            errors.country
+              ? "border-red-500 ring-red-500"
+              : "border-gray-300 ring-gray-300"
+          }`}
+        >
+          <GlobeAltIcon className="h-5 w-5 mr-2 text-blue-600" />
           <Select
-            onValueChange={(value) =>
-              setValue("bankCode", value, { shouldValidate: true })
-            }
-            value={selectedBankCode || ""}
-            disabled={loadingBanks}
+            value={watch("country") || ""}
+            onValueChange={(value) => {
+              setValue("country", value, { shouldValidate: true });
+              setValue("bank", "", { shouldValidate: true }); // reset bank on country change
+            }}
+            disabled={loadingCountries}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="flex-1">
               <SelectValue
                 placeholder={
-                  loadingBanks ? "Loading banks..." : "Select your bank"
+                  loadingCountries ? "Loading countries..." : "Select country"
                 }
               />
             </SelectTrigger>
             <SelectContent>
+              {countries.map((c) => (
+                <SelectItem key={c.iso_code} value={c.name}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {errors.country && (
+          <p className="text-xs text-red-600 mt-1">{errors.country.message}</p>
+        )}
+      </div>
+
+      {/* Bank */}
+      <div>
+        <label className="block mb-1 font-medium">
+          Bank <span className="text-red-600">*</span>
+        </label>
+        <div
+          className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${
+            errors.bank
+              ? "border-red-500 ring-red-500"
+              : "border-gray-300 ring-gray-300"
+          }`}
+        >
+          <BanknotesIcon className="h-5 w-5 mr-2 text-green-600" />
+          <Select
+            value={watch("bank") || ""}
+            onValueChange={(value) =>
+              setValue("bank", value, { shouldValidate: true })
+            }
+            disabled={loadingBanks || !selectedCountry}
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="Select your bank" />
+            </SelectTrigger>
+            <SelectContent>
               {uniqueBanks.map((bank) => (
-                <SelectItem key={`${bank.code}-${bank.name}`} value={bank.code}>
+                <SelectItem key={bank.code} value={bank.code}>
                   {bank.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.bankCode && (
-            <p className="text-xs text-red-600">
-              {errors.bankCode.message as string}
-            </p>
-          )}
         </div>
-
-        <InputField
-          label="Account Number"
-          name="accountNumber"
-          placeholder="0123456789"
-          type="number"
-        />
-
-        {accountName && !resolving && (
-          <div className="space-y-1">
-            <Label className="text-sm font-medium">Account Name</Label>
-            <Input
-              type="text"
-              value={accountName}
-              disabled
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-gray-100"
-            />
-          </div>
+        {errors.bank && (
+          <p className="text-xs text-red-600 mt-1">{errors.bank.message}</p>
         )}
       </div>
 
+      {/* Account Number */}
+      <div>
+        <Label className="block mb-1 font-medium">
+          Account Number <span className="text-red-600">*</span>
+        </Label>
+        <div className="flex items-center border rounded-md px-3 py-2">
+          <IdentificationIcon className="h-5 w-5 mr-2 text-orange-600" />
+          <Input
+            {...register("accountNumber", {
+              required: "Account number is required",
+              minLength: {
+                value: 10,
+                message: "Account number must be 10 digits",
+              },
+              maxLength: {
+                value: 10,
+                message: "Account number must be 10 digits",
+              },
+              onChange: (e) => {
+                e.target.value = e.target.value.replace(/\D/g, "");
+              },
+            })}
+            maxLength={10}
+            inputMode="numeric"
+            placeholder="0123456789"
+            className="flex-1 outline-none text-sm"
+          />
+        </div>
+        {errors.accountNumber && (
+          <p className="text-xs text-red-600 mt-1">
+            {errors.accountNumber.message}
+          </p>
+        )}
+      </div>
+
+      {/* Account Name display */}
       {resolving && (
-        <p className="text-sm text-muted-foreground">
-          Resolving account name...
-        </p>
+        <p className="text-sm text-gray-500">Resolving account name...</p>
+      )}
+      {accountName && !resolving && (
+        <div>
+          <Label className="block mb-1 font-medium">Account Name</Label>
+          <Input
+            type="text"
+            value={accountName}
+            disabled
+            className="w-full border rounded-md bg-gray-100 px-3 py-2 text-sm"
+          />
+        </div>
       )}
 
-      <div className="flex gap-2">
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="cursor-pointer"
-        >
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </Button>
-
+      {/* buttons */}
+      <div className="flex justify-end gap-2 mt-4">
         <Button
           onClick={onClose}
           disabled={isSubmitting}
-          className="cursor-pointer"
+          className="px-4 py-2 border rounded-md text-gray-700 cursor-pointer"
+          variant={"ghost"}
         >
           Cancel
+        </Button>
+        <Button
+          disabled={isSubmitting || !accountName || resolving}
+          className="px-4 py-2 rounded-md cursor-pointer"
+        >
+          {isSubmitting ? "Submitting..." : "Submit"}
         </Button>
       </div>
     </form>

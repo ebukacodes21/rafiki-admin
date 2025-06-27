@@ -41,9 +41,24 @@ export type Billboard = {
   image: string;
 }
 
-export type PaymentProvider = {
-  name: string;
-  status: string; // e.g., "connected", "disconnected"
+type ProviderDetails = {
+	// Paystack
+	subaccountCode:   string  
+	settlementBank:   string 
+	percentageCharge: number 
+
+	// Stripe
+	accountId:    string 
+	accessToken:  string 
+	refreshToken: string 
+	stripeUserId: string 
+}
+
+type PaymentProvider = {
+	name:        string        
+	status:      string         
+	connectAt:  Date       
+	details:     ProviderDetails
 }
 
 export type ServiceBooking = {
