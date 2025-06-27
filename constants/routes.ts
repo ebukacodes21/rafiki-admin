@@ -10,6 +10,7 @@ export const routes = {
   CALLBACK_CONNECT: "/callback-connect",
 
   ONBOARD: "/auth/onboard",
+  ACCESS: "/auth/access",
 
   HOME: "/",
   DASHBOARD: "/dashboard",

@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        console.log(res.data)
         return NextResponse.json(res.data);
     } catch (error: any) {
         if (error.code === "ECONNREFUSED"){

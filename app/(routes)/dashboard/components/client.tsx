@@ -14,10 +14,15 @@ import { apiCall, formatError } from "@/utils/helper";
 
 const DashboardClient = () => {
   const firm = useAppSelector(selectCurrentFirm);
-  const [showModal, setShowModal] = useState(false);
-  const [emailInput, setEmailInput] = useState("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [emailInput, setEmailInput] = useState<string>("");
+  const [loading, setIsLoading] = useState<boolean>(false);
 
   const handleInviteLawyers = async () => {
+    if (!emailInput) {
+      toast.error("Enter atleast one email address");
+      return;
+    }
     const rawEmails = emailInput
       .split(",")
       .map((e) => e.trim())
@@ -43,20 +48,25 @@ const DashboardClient = () => {
       return;
     }
 
+    setIsLoading(true);
     const result = await apiCall("/api/invite-lawyer", "POST", {
       firmId: firm?.id,
       firmName: firm?.name,
       emails: rawEmails,
     });
+
     if (result.name === "AxiosError") {
+      setIsLoading(false);
+      setShowModal(false);
+      setEmailInput("");
       toast.error(formatError(result));
       return;
     }
 
-    console.log(result);
-    toast.success(result)
+    toast.success(result.message);
     setShowModal(false);
     setEmailInput("");
+    setIsLoading(false);
   };
 
   return (
@@ -66,7 +76,7 @@ const DashboardClient = () => {
 
         <Button className="cursor-pointer" onClick={() => setShowModal(true)}>
           <PlusIcon className="mr-2 h-4 w-4" />
-          Invite Lawyer
+          Invite Lawyers
         </Button>
       </div>
       <Separator />
@@ -74,8 +84,8 @@ const DashboardClient = () => {
       <Modal
         onClose={() => {}}
         isOpen={showModal}
-        title="Invite Lawyer"
-        description="Invite one or more lawyers to your firm. Enter their email addresses separated by commas. Each invited lawyer will receive login credentials to access their dashboard and begin onboarding."
+        title="Invite Lawyers"
+        description="Enter their email addresses separated by commas. Each lawyer will receive a secure access link via email, allowing them to log in and gain access to your firm’s dashboard"
       >
         <div className="space-y-4">
           <Textarea
@@ -89,10 +99,15 @@ const DashboardClient = () => {
               className="cursor-pointer"
               variant="ghost"
               onClick={() => setShowModal(false)}
+              disabled={loading}
             >
               Cancel
             </Button>
-            <Button className="cursor-pointer" onClick={handleInviteLawyers}>
+            <Button
+              disabled={loading}
+              className="cursor-pointer"
+              onClick={handleInviteLawyers}
+            >
               Send Invites
             </Button>
           </div>

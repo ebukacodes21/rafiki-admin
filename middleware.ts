@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
     routes.FORGOT,
     routes.RESET,
     routes.VERIFY,
+    routes.ACCESS,
     routes.CALLBACK_SIGNIN,
     routes.CALLBACK_SIGNUP,
   ].includes(pathname);
@@ -60,6 +61,7 @@ export const config = {
     "/auth/callback-signup",
     "/auth/callback-signin",
     "/auth/onboard",
+    "/auth/access",
 
     "/dashboard",
     "/consultations",

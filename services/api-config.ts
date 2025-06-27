@@ -15,13 +15,14 @@ const apiConfig = {
     onboard: `${admin_base_url}/admin/onboard`,
     updateAccount: `${admin_base_url}/admin/update-account`,
     updatePassword: `${admin_base_url}/admin/update-password`,
-    invite: `${admin_base_url}/admin/add-admin`,
+    grantAccess: `${admin_base_url}/admin/grant-access`,
 
     // admin firm routes
     getAdminFirm: `${firm_base_url}/firm/private`,
     connectCalendar: `${firm_base_url}/firm/connect-calendar`,
     updateAvailability: `${firm_base_url}/firm/update-availability`,
     updateFee: `${firm_base_url}/firm/update-fee`,
+    invite: `${firm_base_url}/firm/invite-lawyers`,
 }
 
 export default apiConfig;
