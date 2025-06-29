@@ -26,6 +26,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { isBefore } from "date-fns";
 import React, { FC, useState } from "react";
 import { TimePicker } from "./timepicker";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type AvailabilityProps = {
   timeZone: string;

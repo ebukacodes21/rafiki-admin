@@ -4,16 +4,21 @@ import axios from "axios";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const { method } = request;
+  const { method, url } = request;
   const token = request.cookies.get(COOKIE_NAME)?.value;
+  const object = new URL(url);
+  const { searchParams } = object;
 
   try {
     const res = await axios({
       method: method,
-      url: ApiConfig.getAdminFirm,
-      headers: {
-        Authorization: `Bearer ${token}`,
+      url: ApiConfig.disconnectPayment,
+      params: {
+        provider: searchParams.get("provider"),
       },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     return NextResponse.json(res.data);

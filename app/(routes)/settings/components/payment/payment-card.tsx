@@ -36,11 +36,7 @@ import toast from "react-hot-toast";
 
 type FormType = z.infer<typeof FeeSchema>;
 
-export default function PaymentFeeForm({
-  onConnectPaystack,
-}: {
-  onConnectPaystack: () => void;
-}) {
+export default function PaymentFeeForm({ onConnectPaystack }: { onConnectPaystack: () => void }) {
   const firm = useAppSelector(selectCurrentFirm);
   const dispatch = useAppDispatch();
   const [enabled, setEnabled] = useState<boolean>(
@@ -99,7 +95,7 @@ export default function PaymentFeeForm({
               id="consultation-fee-toggle"
               checked={enabled}
               onCheckedChange={setEnabled}
-              className="cursor-pointer text-green-600"
+              className="cursor-pointer"
             />
           </div>
 

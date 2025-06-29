@@ -72,7 +72,7 @@ export default function CalendarSettings() {
             onClick={handleGoogleCalendar}
             className="cursor-pointer"
           >
-            {isConnected ? "Connected" : "Disconnect"}
+            {isConnected ? "Disconnect" : "Connect"}
           </Button>
         </div>
 

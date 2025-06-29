@@ -43,7 +43,6 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
     { name: string; iso_code: string }[]
   >([]);
   const [banks, setBanks] = useState<{ name: string; code: string }[]>([]);
-  const [loading, setLoading] = useState<boolean>(false)
   const [accountName, setAccountName] = useState<string | null>(null);
   const [loadingCountries, setLoadingCountries] = useState(false);
   const [loadingBanks, setLoadingBanks] = useState(false);
@@ -116,11 +115,10 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
   // handle form submission
   const onSubmit: SubmitHandler<FormType> = async (data) => {
     if (!accountName) {
-      toast.error("Please resolve the account name");
+      toast.error("please resolve the account name");
       return;
     }
 
-    setLoading(true)
     const result = await apiCall("/api/connect-paystack", "POST", {
       firmName: firm?.name,
       bankCode: data.bank,
@@ -128,15 +126,14 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
     });
     
     if (result.name === "AxiosError") {
-      setLoading(false)
       toast.error(formatError(result))
       onClose();
       return
     }
 
+    console.log(result)
     toast.success(result.message)
     dispatch(setFirm(result.data))
-    setLoading(false)
     onClose()
   };
 
@@ -151,9 +148,9 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
     >
       {/* Country */}
       <div>
-        <label className="block mb-1 font-medium">
+        <Label className="block mb-1 font-medium">
           Country <span className="text-red-600">*</span>
-        </label>
+        </Label>
         <div
           className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${
             errors.country
@@ -170,7 +167,7 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
             }}
             disabled={loadingCountries}
           >
-            <SelectTrigger className="flex-1">
+            <SelectTrigger className="flex-1 cursor-pointer">
               <SelectValue
                 placeholder={
                   loadingCountries ? "Loading countries..." : "Select country"
@@ -193,9 +190,9 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
 
       {/* Bank */}
       <div>
-        <label className="block mb-1 font-medium">
+        <Label className="block mb-1 font-medium">
           Bank <span className="text-red-600">*</span>
-        </label>
+        </Label>
         <div
           className={`flex items-center border rounded-md px-3 py-2 focus-within:ring-2 ${
             errors.bank
@@ -211,7 +208,7 @@ const PaystackForm: FC<{ onClose: () => void }> = ({ onClose }) => {
             }
             disabled={loadingBanks || !selectedCountry}
           >
-            <SelectTrigger className="flex-1">
+            <SelectTrigger className="flex-1 cursor-pointer">
               <SelectValue placeholder="Select your bank" />
             </SelectTrigger>
             <SelectContent>

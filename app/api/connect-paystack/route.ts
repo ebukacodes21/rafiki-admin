@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const res = await axios({
       method: method,
-      url: ApiConfig.connectPayment,
+      url: ApiConfig.connectPaystack,
       headers: {
         Authorization: `Bearer ${token}`,
       },

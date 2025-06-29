@@ -1,23 +1,78 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
+
 import {
-  CalendarDaysIcon,
-  DocumentTextIcon,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
   EyeIcon,
+  DocumentTextIcon,
+  CalendarDaysIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import React from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useForm, useFieldArray } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRequireAuth } from "../../hooks/useAuth";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
-const AddNewMatterPage = () => {
+const MatterSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  practiceArea: z.string().optional(),
+  documents: z.array(z.string()).optional(),
+  events: z.array(z.string()).optional(),
+  parties: z.array(z.string()).optional(),
+});
+
+type MatterFormType = z.infer<typeof MatterSchema>;
+
+export default function AddNewMatterPage() {
   useRequireAuth();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<MatterFormType>({
+    resolver: zodResolver(MatterSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      practiceArea: "",
+      documents: [],
+      events: [],
+      parties: [],
+    },
+  });
+
+  const [tab, setTab] = useState("overview");
+
+  const onSubmit = (data: MatterFormType) => {
+    // Simulate submission
+    console.log("Submitted Matter:", data);
+    toast.success("Matter submitted successfully");
+  };
+
   return (
-    <div className="flex w-full max-w-6xl flex-col gap-6 mx-auto mt-8">
-      <Card className="md:col-span-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex w-full max-w-6xl flex-col gap-6 mx-auto mt-8"
+    >
+     <Card className="md:col-span-2">
         <CardContent className="p-4">
           <Tabs defaultValue="overview">
             <TabsList className="mb-4">
@@ -105,8 +160,6 @@ const AddNewMatterPage = () => {
           </Tabs>
         </CardContent>
       </Card>
-    </div>
+    </form>
   );
-};
-
-export default AddNewMatterPage;
+}

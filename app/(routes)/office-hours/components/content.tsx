@@ -19,12 +19,12 @@ import toast from "react-hot-toast";
 const orderedDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 export default function AvailabilityTabs() {
-  const firm = useAppSelector(selectCurrentFirm);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [zones, setZones] = useState<string[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get("tab") || "availability";
+  const firm = useAppSelector(selectCurrentFirm);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [zones, setZones] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState(defaultTab);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [dateOverrides, setDateOverrides] = useState<DateSpecificHours[]>([]);

@@ -7,50 +7,79 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { v4 as uuidv4 } from "uuid";
-import { useEffect, useState } from "react";
-import { useAppSelector } from "@/redux/hooks/useSelectorHook";
-import { selectCurrentFirm } from "@/redux/features/firm";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/useSelectorHook";
+import { selectCurrentFirm, setFirm } from "@/redux/features/firm";
+import { apiCall, formatError } from "@/utils/helper";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 type PaymentMethodProp = {
   onConnectPaystack: () => void;
-}
+};
 
-export default function PaymentMethod({ onConnectPaystack }: PaymentMethodProp) {
+export default function PaymentMethod({
+  onConnectPaystack,
+}: PaymentMethodProp) {
   const firm = useAppSelector(selectCurrentFirm);
-  const [loading, setIsLoading] = useState<boolean>(false);
-  const [isConnected, setIsConnected] = useState(false);
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
+  const isPaystack = firm?.paymentProviders?.some((d) => d.name === "paystack");
+  const isStripe = firm?.paymentProviders?.some((d) => d.name === "stripe");
 
-  useEffect(() => {
-    if (firm?.paymentProviders?.some((d) => d.name === "paystack")) {
-      setIsConnected(true);
+  const connectStripe = async () => {
+    setLoading(true);
+    const result = await apiCall(
+      `/api/connect-stripe?firmId=${firm?.id}`,
+      "POST"
+    );
+    if (result.name === "AxiosError") {
+      toast.error(formatError(result));
+      setLoading(false);
+      return;
     }
-  }, [firm]);
 
-  const handleConnect = () => {
-    setIsLoading(true);
-    const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-    const REDIRECT_URI = process.env.NEXT_PUBLIC_CALLBACK_CONNECT!;
-    const NONCE = uuidv4();
+    if (result.url) {
+      window.location.href = result.url;
+      return;
+    }
 
-    const googleOAuthURL =
-      `https://accounts.google.com/o/oauth2/v2/auth?` +
-      `client_id=${GOOGLE_CLIENT_ID}&` +
-      `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
-      `response_type=code&` +
-      `access_type=offline&` +
-      `prompt=consent&` +
-      `scope=${encodeURIComponent(
-        [
-          "openid",
-          "email",
-          "profile",
-          "https://www.googleapis.com/auth/calendar",
-        ].join(" ")
-      )}&` +
-      `state=${NONCE}`;
+    toast.success("Stripe connected");
+    setLoading(false);
 
-    window.location.href = googleOAuthURL;
+    toast.success(result.message);
+    dispatch(setFirm(result.data));
+    setLoading(false);
+  };
+
+  const disconnectStripe = async (providerName: "paystack" | "stripe") => {
+    const provider = firm?.paymentProviders?.find(
+      (p) => p.name === providerName
+    );
+
+    if (!provider) {
+      toast.error(`${providerName} provider not found`);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const result = await apiCall(
+        `/api/disconnect-payment?provider=${providerName}`,
+        "GET"
+      );
+
+      if (result.name === "AxiosError") {
+        toast.error(formatError(result));
+        return;
+      }
+
+      dispatch(setFirm(result.data));
+      toast.success(`${providerName} disconnected successfully`);
+    } catch (err) {
+      toast.error(`Failed to disconnect ${providerName}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,7 +105,7 @@ export default function PaymentMethod({ onConnectPaystack }: PaymentMethodProp) 
             onClick={onConnectPaystack}
             className="cursor-pointer"
           >
-            {isConnected ? "Disconnect" : "Connect"}
+            {isPaystack ? "Disconnect" : "Connect"}
           </Button>
         </div>
 
@@ -88,11 +117,11 @@ export default function PaymentMethod({ onConnectPaystack }: PaymentMethodProp) 
             </div>
           </div>
           <Button
-            onClick={handleConnect}
             disabled={loading}
+            onClick={isStripe ? () => disconnectStripe("stripe") : connectStripe}
             className="cursor-pointer"
           >
-            {isConnected ? "Disconnect" : "Connect"}
+            {isStripe ? "Disconnect" : "Connect"}
           </Button>
         </div>
       </CardContent>
