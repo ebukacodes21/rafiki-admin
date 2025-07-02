@@ -20,6 +20,8 @@ const apiConfig = {
     // admin firm routes
     getAdminFirm: `${firm_base_url}/firm/private`,
     connectCalendar: `${firm_base_url}/firm/connect-calendar`,
+    setPrimary: `${firm_base_url}/firm/set-primary-provider`,
+    disconnectCalendar: `${firm_base_url}/firm/disconnect-calendar`,
     updateAvailability: `${firm_base_url}/firm/update-availability`,
     updateFee: `${firm_base_url}/firm/update-fee`,
     invite: `${firm_base_url}/firm/invite-lawyers`,

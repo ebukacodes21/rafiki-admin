@@ -55,7 +55,8 @@ type ProviderDetails = {
 }
 
 type PaymentProvider = {
-	name:        string        
+	name:        string    
+  isPrimary: boolean;    
 	status:      string         
 	connectAt:  Date       
 	details:     ProviderDetails
@@ -76,7 +77,8 @@ export type ServiceBooking = {
 }
 
 export type Diary = {
-  userId: string;          
+  userId: string;     
+  isPrimary: boolean;     
   displayName: string;
   email: string;
   provider: string;        

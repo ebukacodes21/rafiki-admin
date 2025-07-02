@@ -119,36 +119,12 @@ const SettingsTabs = () => {
       </Tabs>
 
       <Modal
-        title={isPaystack ? "Disconnect Paystack" : "Connect Paystack"}
-        description={
-          isPaystack
-            ? "You have already connected Paystack. Click below to disconnect."
-            : "Fill out the following details to link your Paystack account."
-        }
+        title="Connect Paystack"
+        description="Fill out the following details to link your Paystack account."
         isOpen={showModal}
         onClose={() => setShowModal(false)}
       >
-        {isPaystack ? (
-          <div className="space-x-2">
-            <Button
-              variant={"ghost"}
-              className="cursor-pointer"
-              onClick={() => setShowModal(false)}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="cursor-pointer"
-              onClick={() => handleDisconnect("paystack")}
-              disabled={loading}
-            >
-              Disconnect Paystack
-            </Button>
-          </div>
-        ) : (
-          <PaystackForm onClose={() => setShowModal(false)} />
-        )}
+        <PaystackForm onClose={() => setShowModal(false)} />
       </Modal>
     </div>
   );
