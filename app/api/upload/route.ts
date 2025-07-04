@@ -5,8 +5,8 @@ import { NextResponse, NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { method, cookies } = request; 
-  const data = await request.formData(); 
   const token = cookies.get(COOKIE_NAME)?.value || ""; 
+  const data = await request.formData(); 
 
   const file = data.get('file');
   if (!file) {

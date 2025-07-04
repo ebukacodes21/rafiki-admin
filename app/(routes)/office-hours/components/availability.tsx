@@ -169,7 +169,7 @@ export const Availability: FC<AvailabilityProps> = ({
           </p>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="justify-start">
+              <Button variant="outline" className="justify-start cursor-pointer">
                 <CalendarDaysIcon className="h-4 w-4 mr-2 text-pink-500" />
                 {selectedDates.length > 0
                   ? (() => {

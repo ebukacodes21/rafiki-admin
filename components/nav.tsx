@@ -54,6 +54,11 @@ const MainNav = ({
       label: "Matters",
       active: pathName === routes.MATTERS,
     },
+    {
+      href: routes.DOCUMENTS,
+      label: "Documents",
+      active: pathName === routes.DOCUMENTS,
+    },
     // {
     //   href: routes.LAW_FIRM,
     //   label: "Law Firm",
@@ -68,7 +73,7 @@ const MainNav = ({
 
   return (
     <nav className={cn("hidden md:flex items-center space-x-4 lg:space-x-6", className)} {...props}>
-    <h1 className="text-2xl font-bold italic">FirmFront</h1>
+    <h1 className="text-2xl font-bold italic">Rafiki</h1>
       {menu.map((item) => (
         <Link
           href={item.href}

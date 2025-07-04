@@ -1,39 +1,26 @@
 "use client";
-import React, { FC } from "react";
-import { Button } from "@/components/ui/button";
-import Heading from "@/components/ui/heading";
-import { Plus } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { CategoryColumn, columns } from "./column";
+
+import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { DataTable } from "@/components/ui/data-table";
+import Heading from "@/components/ui/heading";
+import { useAppSelector } from "@/redux/hooks/useSelectorHook";
+import { selectCurrentFirm } from "@/redux/features/firm";
+import ConsultationsContent from "./content";
 
-type ConsultationsClientProp = {
-  data: [];
-};
-
-const ConsultationsClient: FC<ConsultationsClientProp> = ({ data }) => {
-  const router = useRouter();
-  const params = useParams();
-
+const ConsultationsClient = () => {
+  const firm = useAppSelector(selectCurrentFirm);
   return (
-    <>
+    <div>
       <div className="flex items-center justify-between">
         <Heading
-          title={`Consultations (${data?.length})`}
+          title={`Consultations (${firm?.consultations?.length})`}
           description="View all Firm Consultations"
         />
-
-        {/* <Button
-          onClick={() => router.push(`/${params.storeId}/categories/new`)}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add New
-        </Button> */}
       </div>
-      <Separator />
-      {/* <DataTable columns={columns} data={data} searchKey="name" /> */}
-    </>
+      <Separator className="my-4" />
+
+     <ConsultationsContent /> 
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import {
   Card,
@@ -22,6 +22,7 @@ export default function CalendarSettings() {
   const firm = useAppSelector(selectCurrentFirm);
   const dispatch = useAppDispatch();
 
+  const isFirstRun = useRef(true);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [disconnectProvider, setDisconnectProvider] = useState<"google" | "outlook" | null>(null);
@@ -30,26 +31,20 @@ export default function CalendarSettings() {
   const [googleConnected, setGoogleConnected] = useState(false);
   const [outlookConnected, setOutlookConnected] = useState(false);
 
-useEffect(() => {
-  const diaries = firm?.diaries ?? [];
-  setGoogleConnected(diaries.some((d) => d.provider === "google"));
-  setOutlookConnected(diaries.some((d) => d.provider === "outlook"));
+  // Set initial state from firm
+  useEffect(() => {
+    const diaries = firm?.diaries ?? [];
+    setGoogleConnected(diaries.some((d) => d.provider === "google"));
+    setOutlookConnected(diaries.some((d) => d.provider === "outlook"));
 
-  if (diaries.length === 0) {
-    setPrimaryProvider(""); 
-    return;
-  }
+    if (diaries.length === 0) {
+      setPrimaryProvider("");
+      return;
+    }
 
-  const primary = diaries.find((d) => d.isPrimary)?.provider;
-  if (primary) {
-    setPrimaryProvider(primary);
-  } else {
-    const firstConnected = diaries.find(
-      (d) => d.provider === "google" || d.provider === "outlook"
-    );
-    setPrimaryProvider(firstConnected?.provider || "");
-  }
-}, [firm]);
+    const primary = diaries.find((d) => d.isPrimary)?.provider;
+    setPrimaryProvider(primary ?? diaries.find(d => d.provider === "google" || d.provider === "outlook")?.provider ?? "");
+  }, [firm]);
 
   const handleGoogleConnect = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
@@ -104,7 +99,11 @@ useEffect(() => {
 
   const savePrimary = useCallback(async () => {
     if (!primaryProvider) return;
-    const res = await apiCall(`/api/update-primary?provider=${primaryProvider}`, "PUT");
+
+    const res = await apiCall(
+      `/api/update-primary?provider=${primaryProvider}`,
+      "PUT"
+    );
 
     if (res.name === "AxiosError") {
       toast.error(formatError(res));
@@ -115,8 +114,18 @@ useEffect(() => {
   }, [primaryProvider, dispatch]);
 
   useEffect(() => {
-    const id = setTimeout(savePrimary, 1000);
-    return () => clearTimeout(id);
+    if (!primaryProvider) return;
+
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      savePrimary();
+    }, 1000);
+
+    return () => clearTimeout(timeout);
   }, [primaryProvider, savePrimary]);
 
   return (
@@ -141,7 +150,6 @@ useEffect(() => {
             </div>
             <Button
               disabled={loading}
-              className="cursor-pointer"
               onClick={() =>
                 googleConnected
                   ? (setShowModal(true), setDisconnectProvider("google"))
@@ -165,7 +173,6 @@ useEffect(() => {
             </div>
             <Button
               disabled={loading}
-              className="cursor-pointer"
               onClick={() =>
                 outlookConnected
                   ? (setShowModal(true), setDisconnectProvider("outlook"))
@@ -179,7 +186,9 @@ useEffect(() => {
           {/* Primary Picker */}
           {(googleConnected || outlookConnected) && (
             <div className="pt-4">
-              <p className="text-sm font-medium mb-2">Select Primary Calendar</p>
+              <p className="text-sm font-medium mb-2">
+                Select Primary Calendar
+              </p>
               <RadioGroup
                 value={primaryProvider}
                 onValueChange={setPrimaryProvider}
@@ -203,7 +212,7 @@ useEffect(() => {
         </CardContent>
       </Card>
 
-      {/* Modal */}
+      {/* Disconnect Modal */}
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -213,10 +222,14 @@ useEffect(() => {
         } Calendar?`}
       >
         <div className="flex justify-end gap-2 pt-4">
-          <Button className="cursor-pointer" variant="ghost" onClick={() => setShowModal(false)}>
+          <Button
+            variant="ghost"
+            onClick={() => setShowModal(false)}
+            disabled={loading}
+          >
             Cancel
           </Button>
-          <Button className="cursor-pointer" onClick={handleDisconnectCalendar} disabled={loading}>
+          <Button onClick={handleDisconnectCalendar} disabled={loading}>
             Disconnect
           </Button>
         </div>

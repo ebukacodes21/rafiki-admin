@@ -17,6 +17,7 @@ import {
 } from "@/utils/helper";
 import toast from "react-hot-toast";
 const orderedDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+import { motion } from 'framer-motion'
 
 export default function AvailabilityTabs() {
   const router = useRouter();
@@ -36,9 +37,9 @@ export default function AvailabilityTabs() {
   });
   const dispatch = useAppDispatch();
   const [weeklyHours, setWeeklyHours] = useState(() => {
-    if (!firm?.weeklyHours) return [];
+    if (!firm?.availability?.weeklyHours) return [];
     return orderedDays.map((day) => {
-      const ranges = firm.weeklyHours[day] || [];
+      const ranges = firm.availability.weeklyHours[day] || [];
       const firstRange = ranges[0];
       return {
         day,
@@ -71,11 +72,11 @@ export default function AvailabilityTabs() {
 
   // Load from firm on mount
   useEffect(() => {
-    if (!firm?.weeklyHours) return;
+    if (!firm?.availability?.weeklyHours) return;
 
     setWeeklyHours(
       orderedDays.map((day) => {
-        const ranges = firm.weeklyHours[day] || [];
+        const ranges = firm.availability.weeklyHours[day] || [];
         const firstRange = ranges[0];
         return {
           day,
@@ -186,7 +187,12 @@ export default function AvailabilityTabs() {
   const debouncedSave = useMemo(() => debounce(handleSave, 1000), [handleSave]);
 
   return (
-    <div className="flex w-full max-w-6xl flex-col gap-6 mx-auto mt-8">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className=""
+    >
+      <div className="flex w-full max-w-6xl flex-col gap-6 mx-auto mt-8">
       <Tabs value={currentTab} onValueChange={handleTabChange}>
         <TabsList>
           <TabsTrigger value="availability" className="cursor-pointer">
@@ -220,5 +226,6 @@ export default function AvailabilityTabs() {
         </TabsContent>
       </Tabs>
     </div>
+    </motion.div>
   );
 }

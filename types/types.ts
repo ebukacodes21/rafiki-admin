@@ -18,6 +18,33 @@ export type InitialUserState = {
   user: User | null;
 };
 
+export type Consultation = {
+  id?: string;
+  firmID: string;
+  clientID: string;
+  status: string;
+  paymentRef: string;
+  bookedAt: string;        
+  scheduledFor: string;    
+  duration: number;
+  completedAt?: string;
+  cancelledAt?: string;
+  notes?: string;
+}
+
+export type Diary = {
+  userId: string;     
+  isPrimary: boolean;     
+  displayName: string;
+  email: string;
+  provider: string;        
+  accessToken: string;
+  refreshToken: string;
+  expiry: string;           
+  calendarId: string;
+  connectedAt: string;     
+};
+
 export type TimeRange = {
   open: string;
   close: string;
@@ -34,6 +61,11 @@ export type WeeklyHour = {
   open: string;
   close: string;
   active: boolean;
+}
+
+export type Availability = {
+  timeZone: string;
+  weeklyHours: Record<string, TimeRange[]>; 
 }
 
 export type Billboard = {
@@ -62,41 +94,14 @@ type PaymentProvider = {
 	details:     ProviderDetails
 }
 
-export type ServiceBooking = {
-  id?: string;
-  firmID: string;
-  clientID: string;
-  status: string;
-  paymentRef: string;
-  bookedAt: string;        
-  scheduledFor: string;    
-  duration: number;
-  completedAt?: string;
-  cancelledAt?: string;
-  notes?: string;
-}
-
-export type Diary = {
-  userId: string;     
-  isPrimary: boolean;     
-  displayName: string;
-  email: string;
-  provider: string;        
-  accessToken: string;
-  refreshToken: string;
-  expiry: string;           
-  calendarId: string;
-  connectedAt: string;     
-};
-
 export type Firm = {
   id?: string;
   adminID?: string;
   adminIds?: string[];
   name?: string;
-  weeklyHours: Record<string, TimeRange[]>; 
+  availability: Availability; 
   dateOverrides?: DateSpecificHours[];
-  serviceBookings?: ServiceBooking[];
+  consultations?: Consultation[];
   category?: string;
   description?: string;
   founded?: string;

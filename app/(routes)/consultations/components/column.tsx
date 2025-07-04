@@ -2,31 +2,45 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellActions } from "./cell-actions";
+import { format } from "date-fns";
 
-export type CategoryColumn = {
-  id: string;
-  name: string;
-  billboard_id: string;
-  billboard_label: string;
-  created_at: string;
+export type Consultation = {
+  id?: string;
+  firmID: string;
+  clientID: string;
+  status: string;
+  paymentRef: string;
+  bookedAt: string;
+  scheduledFor: string;
+  duration: number;
+  completedAt?: string;
+  cancelledAt?: string;
+  notes?: string;
 };
 
-export const columns: ColumnDef<CategoryColumn>[] = [
+export const columns: ColumnDef<Consultation>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "scheduledFor",
+    header: "Scheduled For",
+    cell: ({ row }) => {
+      const value = row.original.scheduledFor;
+      return format(new Date(value), "PPP p"); 
+    },
   },
   {
-    accessorKey: "billboard",
-    header: "Billboard",
-    cell: ({ row }) => row.original.billboard_label
-  },
-  {
-    accessorKey: "created_at",
+    accessorKey: "bookedAt",
     header: "Date",
+    cell: ({ row }) => {
+      const value = row.original.bookedAt;
+      return format(new Date(value), "PPP p");
+    },
   },
   {
-    id: "actions",
-    cell: ({ row }) => <CellActions data={row.original} />,
+    accessorKey: "notes",
+    header: "Notes",
   },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <CellActions data={row.original} />,
+  // },
 ];
