@@ -6,6 +6,7 @@ import Content from "./content";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import { routes } from "@/constants";
 
 const MattersClient = () => {
   const router = useRouter()
@@ -18,7 +19,7 @@ const MattersClient = () => {
         />
 
         <Button
-          onClick={() => router.push(`/matters/new`)}
+          onClick={() => router.push(`${routes.MATTERS}/new`)}
           className="cursor-pointer"
         >
           <PlusIcon className="mr-2 h-4 w-4" />

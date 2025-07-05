@@ -104,3 +104,25 @@ export const FeeSchema = z.object({
     required_error: "currency is required"
   }),
 });
+
+export const MatterSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  area: z.string().min(1, "Select a practice area"),
+  events: z
+    .array(
+      z.object({
+        title: z.string().min(1, "Event title is required"),
+        date: z.string().min(1, "Event date is required"),
+      })
+    )
+    .optional(),
+  parties: z
+    .array(
+      z.object({
+        name: z.string().min(1, "Name is required"),
+        role: z.string().min(1, "Role is required"),
+      })
+    )
+    .optional(),
+});

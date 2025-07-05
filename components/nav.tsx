@@ -56,7 +56,7 @@ const MainNav = ({
     },
     {
       href: routes.DOCUMENTS,
-      label: "Documents",
+      label: "Letterhead",
       active: pathName === routes.DOCUMENTS,
     },
     // {

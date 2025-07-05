@@ -18,6 +18,28 @@ export type InitialUserState = {
   user: User | null;
 };
 
+export type Matter = {
+  id: string; 
+  firmID: string; 
+  title: string;
+  description: string;
+  area: string; 
+  documents: string[];
+  events: MatterEvent[];
+  parties: MatterParty[];
+};
+
+export type MatterEvent = {
+  name: string;
+  date: Date; 
+};
+
+export type MatterParty = {
+  name: string;
+  role: string;
+};
+
+
 export type Consultation = {
   id?: string;
   firmID: string;
@@ -102,6 +124,7 @@ export type Firm = {
   availability: Availability; 
   dateOverrides?: DateSpecificHours[];
   consultations?: Consultation[];
+  matters: Matter[]
   category?: string;
   description?: string;
   founded?: string;

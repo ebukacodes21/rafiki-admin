@@ -36,7 +36,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const firm = await getFirm();
-    if (!firm) {
+  if (!firm) {
     redirect(routes.LOGIN);
   }
 

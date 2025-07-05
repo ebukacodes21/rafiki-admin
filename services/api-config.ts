@@ -17,7 +17,7 @@ const apiConfig = {
     updatePassword: `${admin_base_url}/admin/update-password`,
     grantAccess: `${admin_base_url}/admin/grant-access`,
 
-    // admin firm routes
+    // firm routes
     getAdminFirm: `${firm_base_url}/firm/private`,
     connectCalendar: `${firm_base_url}/firm/connect-calendar`,
     setPrimary: `${firm_base_url}/firm/set-primary-provider`,
@@ -28,6 +28,7 @@ const apiConfig = {
     connectPaystack: `${firm_base_url}/firm/connect-paystack`,
     connectStripe: `${firm_base_url}/firm/connect-stripe`,
     disconnectPayment: `${firm_base_url}/firm/disconnect-payment`,
+    createMatter: `${firm_base_url}/firm/create-matter`
 }
 
 export default apiConfig;

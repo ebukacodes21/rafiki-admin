@@ -19,6 +19,13 @@ export type Consultation = {
 };
 
 export const columns: ColumnDef<Consultation>[] = [
+    {
+    accessorKey: "id",
+    header: "S/N",
+    cell: ({ row }) => {
+      return row.index + 1 + "."
+    },
+  },
   {
     accessorKey: "scheduledFor",
     header: "Scheduled For",
@@ -29,7 +36,7 @@ export const columns: ColumnDef<Consultation>[] = [
   },
   {
     accessorKey: "bookedAt",
-    header: "Date",
+    header: "Date Booked",
     cell: ({ row }) => {
       const value = row.original.bookedAt;
       return format(new Date(value), "PPP p");
@@ -38,6 +45,14 @@ export const columns: ColumnDef<Consultation>[] = [
   {
     accessorKey: "notes",
     header: "Notes",
+  },
+   {
+    accessorKey: "status",
+    header: "Status",
+  },
+    {
+    accessorKey: "meetingLink",
+    header: "Meeting Link",
   },
   // {
   //   id: "actions",

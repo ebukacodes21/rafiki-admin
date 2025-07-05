@@ -1,4 +1,4 @@
-import { faqs, countryList, COOKIE_NAME } from "./data";
+import { faqs, countryList, COOKIE_NAME, areas } from "./data";
 import { routes } from "./routes";
 
-export { faqs, routes, countryList, COOKIE_NAME }
+export { faqs, routes, countryList, COOKIE_NAME, areas }

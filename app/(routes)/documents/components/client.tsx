@@ -13,8 +13,8 @@ const DocumentsClient = () => {
     <>
       <div className="flex items-center justify-between">
         <Heading
-          title={`Documents`}
-          description="Manage your documents"
+          title={`Letterhead`}
+          description="Manage your letters and writings"
         />
 
         <Button

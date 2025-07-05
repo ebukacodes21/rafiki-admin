@@ -121,56 +121,72 @@ const ConsultationsContent = () => {
           onValueChange={(value) => setTab(value as typeof tab)}
         >
           <TabsList>
-            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-            <TabsTrigger value="past">Past</TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="upcoming">
+              Upcoming
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="past">
+              Past
+            </TabsTrigger>
 
-            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-              <PopoverTrigger asChild>
-                <TabsTrigger value="range" onClick={() => setPopoverOpen(true)}>
-                  Date Range
-                </TabsTrigger>
-              </PopoverTrigger>
-
-              <PopoverContent className="w-auto p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Select Date Range</h3>
-                </div>
-
-                <Calendar
-                  mode="range"
-                  selected={tempRange}
-                  onSelect={handleSelect}
-                  numberOfMonths={2}
-                  initialFocus
-                />
-
-                <div className="flex justify-end gap-4 mt-6">
-                  <Button
-                    variant="ghost"
-                    size="sm"
+            <TabsTrigger className="cursor-pointer" value="range">
+              <Popover
+                open={tab === "range" && popoverOpen}
+                onOpenChange={setPopoverOpen}
+              >
+                <PopoverTrigger asChild>
+                  <div
                     onClick={() => {
-                      setTempRange(appliedRange); // revert changes
-                      setPopoverOpen(false); // close popover
+                      setTab("range"); // ensure the tab is selected
+                      setPopoverOpen(true); // open the popover
                     }}
                   >
-                    Cancel
-                  </Button>
+                    Date Range
+                  </div>
+                </PopoverTrigger>
 
-                  <Button
-                    size="sm"
-                    disabled={!tempRange?.from || !tempRange?.to}
-                    onClick={() => {
-                      if (tempRange?.from && tempRange?.to) {
-                        setAppliedRange(tempRange); // apply new range
+                <PopoverContent className="w-auto p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Scan by Date Range</h3>
+                  </div>
+
+                  <Calendar
+                    mode="range"
+                    selected={tempRange}
+                    onSelect={handleSelect}
+                    numberOfMonths={2}
+                    initialFocus
+                  />
+
+                  <div className="flex justify-end gap-4 mt-6">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="cursor-pointer"
+                      onClick={() => {
+                        setTempRange(appliedRange); // revert changes
                         setPopoverOpen(false); // close popover
-                      }
-                    }}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
+                      }}
+                    >
+                      Cancel
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      className="cursor-pointer"
+                      disabled={!tempRange?.from || !tempRange?.to}
+                      onClick={() => {
+                        if (tempRange?.from && tempRange?.to) {
+                          setAppliedRange(tempRange); // apply new range
+                          setPopoverOpen(false); // close popover
+                        }
+                      }}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value={tab}>
@@ -183,7 +199,6 @@ const ConsultationsContent = () => {
             <DataTable
               columns={columns}
               data={filteredConsultations}
-              searchKey="scheduledFor"
             />
           </TabsContent>
         </Tabs>
