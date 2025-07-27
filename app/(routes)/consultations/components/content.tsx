@@ -19,7 +19,7 @@ import { DateRange, OnSelectHandler } from "react-day-picker";
 
 const ConsultationsContent = () => {
   const firm = useAppSelector(selectCurrentFirm);
-  const consultations = firm?.consultations ?? [];
+const consultations = useMemo(() => firm?.consultations ?? [], [firm]);
 
   const [tab, setTab] = useState<"upcoming" | "past" | "range">("upcoming");
   const [popoverOpen, setPopoverOpen] = useState(false);

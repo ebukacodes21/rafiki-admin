@@ -23,7 +23,8 @@ import toast from "react-hot-toast";
 export default function MattersContent() {
   const router = useRouter();
   const firm = useAppSelector(selectCurrentFirm);
-  const matters = firm?.matters || [];
+  const matters = useMemo(() => firm?.matters ?? [], [firm]);
+
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMatter, setSelectedMatter] = useState<number | null>(null);
