@@ -25,7 +25,6 @@ export default function MattersContent() {
   const firm = useAppSelector(selectCurrentFirm);
   const matters = useMemo(() => firm?.matters ?? [], [firm]);
 
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMatter, setSelectedMatter] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);

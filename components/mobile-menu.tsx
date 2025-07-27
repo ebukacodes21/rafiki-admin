@@ -43,16 +43,16 @@ const menu: MenuItem[] = [
     path: routes.OFFICER_HOURS,
     icon: <CalendarDaysIcon className="w-5 h-5" />,
   },
-  {
-    title: "Clients",
-    path: routes.CLIENTS,
-    icon: <UsersIcon className="w-5 h-5" />,
-  },
-  {
-    title: "Law Firm",
-    path: routes.LAW_FIRM,
-    icon: <BuildingOffice2Icon className="w-5 h-5" />,
-  },
+  // {
+  //   title: "Clients",
+  //   path: routes.CLIENTS,
+  //   icon: <UsersIcon className="w-5 h-5" />,
+  // },
+  // {
+  //   title: "Law Firm",
+  //   path: routes.LAW_FIRM,
+  //   icon: <BuildingOffice2Icon className="w-5 h-5" />,
+  // },
   {
     title: "Settings",
     path: routes.SETTINGS,

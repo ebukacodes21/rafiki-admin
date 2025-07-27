@@ -59,11 +59,11 @@ const MainNav = ({
       label: "Letterhead",
       active: pathName === routes.DOCUMENTS,
     },
-    {
-      href: routes.DOCU_SIGN,
-      label: "DocuScan",
-      active: pathName === routes.DOCU_SIGN,
-    },
+    // {
+    //   href: routes.DOCU_SIGN,
+    //   label: "DocuScan",
+    //   active: pathName === routes.DOCU_SIGN,
+    // },
     // {
     //   href: routes.LAW_FIRM,
     //   label: "Law Firm",
