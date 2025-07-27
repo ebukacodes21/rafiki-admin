@@ -28,7 +28,9 @@ const apiConfig = {
     connectPaystack: `${firm_base_url}/firm/connect-paystack`,
     connectStripe: `${firm_base_url}/firm/connect-stripe`,
     disconnectPayment: `${firm_base_url}/firm/disconnect-payment`,
-    createMatter: `${firm_base_url}/firm/create-matter`
+    createMatter: `${firm_base_url}/firm/create-matter`,
+    deleteMatter: `${firm_base_url}/firm/delete-matter`,
+    editMatter: `${firm_base_url}/firm/edit-matter`,
 }
 
 export default apiConfig;

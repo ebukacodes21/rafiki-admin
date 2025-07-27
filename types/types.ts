@@ -27,6 +27,7 @@ export type Matter = {
   documents: string[];
   events: MatterEvent[];
   parties: MatterParty[];
+  charge: MatterCharge;
 };
 
 export type MatterEvent = {
@@ -37,13 +38,22 @@ export type MatterEvent = {
 export type MatterParty = {
   name: string;
   role: string;
+  email: string;
+  phone: string;
+  address: string;
 };
 
+export type MatterCharge = {
+  type: "Flat" | "Hourly";
+  amount: number;
+  vat: number;
+  discount: number;
+};
 
 export type Consultation = {
   id?: string;
   firmID: string;
-  clientID: string;
+  email: string;
   status: string;
   paymentRef: string;
   bookedAt: string;        
@@ -76,13 +86,6 @@ export type DateSpecificHours = {
   date: string; 
   timeRanges: TimeRange[];
   isClosed: boolean;
-}
-
-export type WeeklyHour = {
-  day: string;
-  open: string;
-  close: string;
-  active: boolean;
 }
 
 export type Availability = {

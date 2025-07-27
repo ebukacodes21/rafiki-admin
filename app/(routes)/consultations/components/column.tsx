@@ -7,7 +7,7 @@ import { format } from "date-fns";
 export type Consultation = {
   id?: string;
   firmID: string;
-  clientID: string;
+  email: string;
   status: string;
   paymentRef: string;
   bookedAt: string;
@@ -34,13 +34,16 @@ export const columns: ColumnDef<Consultation>[] = [
       return format(new Date(value), "PPP p"); 
     },
   },
-  {
-    accessorKey: "bookedAt",
-    header: "Date Booked",
+    {
+    accessorKey: "duration",
+    header: "Duration",
     cell: ({ row }) => {
-      const value = row.original.bookedAt;
-      return format(new Date(value), "PPP p");
+      return row.original.duration + " " + "mins"
     },
+  },
+    {
+    accessorKey: "email",
+    header: "Client",
   },
   {
     accessorKey: "notes",
@@ -49,13 +52,16 @@ export const columns: ColumnDef<Consultation>[] = [
    {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      return row.original.status.toLocaleUpperCase()
+    },
   },
     {
     accessorKey: "meetingLink",
     header: "Meeting Link",
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <CellActions data={row.original} />,
-  // },
+  {
+    id: "actions",
+    cell: ({ row }) => <CellActions />,
+  },
 ];

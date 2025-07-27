@@ -17,6 +17,8 @@ import { useAppSelector } from "@/redux/hooks/useSelectorHook";
 import { selectCurrentFirm } from "@/redux/features/firm";
 import { useRouter } from "next/navigation";
 import { routes } from "@/constants";
+import { apiCall } from "@/utils/helper";
+import toast from "react-hot-toast";
 
 export default function MattersContent() {
   const router = useRouter();
@@ -25,6 +27,7 @@ export default function MattersContent() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMatter, setSelectedMatter] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const filteredMatters = useMemo(() => {
     return matters.filter((matter) =>
@@ -38,6 +41,22 @@ export default function MattersContent() {
 
   const current =
     selectedMatter !== null ? filteredMatters[selectedMatter] : null;
+
+  const handleDelete = async () => {
+    setLoading(true);
+    const result = await apiCall(
+      `/api/delete-matter?matterId=${current?.id}`,
+      "GET"
+    );
+    if (result.name === "AxiosError") {
+      setLoading(false);
+      toast.error(result.message);
+      return;
+    }
+
+    router.refresh();
+    toast.success(result.message);
+  };
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -163,18 +182,39 @@ export default function MattersContent() {
                 </TabsContent>
 
                 {current && (
-                  <Button
-                    className="mt-4 w-52 cursor-pointer"
-                    onClick={() => router.push(`${routes.MATTERS}/${current.id}`)}
-                  >
-                    Edit Matter
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button
+                      className="mt-4 w-52 cursor-pointer"
+                      onClick={handleDelete}
+                      disabled={loading}
+                      variant={"ghost"}
+                    >
+                      Delete Matter
+                    </Button>
+                    <Button
+                      className="mt-4 w-52 cursor-pointer"
+                      disabled={loading}
+                      onClick={() =>
+                        router.push(`${routes.MATTERS}/${current.id}`)
+                      }
+                    >
+                      Edit Matter
+                    </Button>
+                  </div>
                 )}
               </Tabs>
             ) : (
-              <p className="text-muted-foreground text-sm">
-                Select a matter to view details.
-              </p>
+              <div>
+                {matters.length > 0 ? (
+                  <p className="text-muted-foreground text-sm">
+                    Select a matter to view details.
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground text-sm">
+                    No Matters Created yet
+                  </p>
+                )}
+              </div>
             )}
           </CardContent>
         </Card>

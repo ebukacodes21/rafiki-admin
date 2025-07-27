@@ -15,7 +15,6 @@ import {
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   BriefcaseIcon,
-  ScaleIcon,
 } from "@heroicons/react/24/outline";
 
 type HandleShowMobileMenu = {
@@ -26,7 +25,6 @@ interface MenuItem {
   title: string;
   path?: string;
   icon: JSX.Element;
-  color: string;
 }
 
 const menu: MenuItem[] = [
@@ -34,42 +32,35 @@ const menu: MenuItem[] = [
     title: "Dashboard",
     path: routes.DASHBOARD,
     icon: <Squares2X2Icon className="w-5 h-5" />,
-    color: "bg-indigo-100 text-indigo-600",
   },
   {
     title: "Consultations",
     path: routes.CONSULTATIONS,
     icon: <BriefcaseIcon className="w-5 h-5" />,
-    color: "bg-yellow-100 text-yellow-600",
   },
   {
     title: "Office Hours",
     path: routes.OFFICER_HOURS,
     icon: <CalendarDaysIcon className="w-5 h-5" />,
-    color: "bg-blue-100 text-blue-600",
   },
   {
     title: "Clients",
     path: routes.CLIENTS,
     icon: <UsersIcon className="w-5 h-5" />,
-    color: "bg-green-100 text-green-600",
   },
   {
     title: "Law Firm",
     path: routes.LAW_FIRM,
     icon: <BuildingOffice2Icon className="w-5 h-5" />,
-    color: "bg-yellow-100 text-yellow-600",
   },
   {
     title: "Settings",
     path: routes.SETTINGS,
     icon: <Cog6ToothIcon className="w-5 h-5" />,
-    color: "bg-pink-100 text-pink-600",
   },
   {
     title: "Log out",
     icon: <ArrowRightOnRectangleIcon className="w-5 h-5" />,
-    color: "bg-red-100 text-red-700",
   },
 ];
 
@@ -103,12 +94,12 @@ export const MobileMenu = ({ handleShowMobileMenu }: HandleShowMobileMenu) => {
       initial={{ y: -1000 }}
       animate={{ y: 0 }}
       transition={{ type: "tween", ease: "linear", duration: 0.3 }}
-      className="fixed top-0 left-0 w-64 h-full bg-white z-50 shadow-lg"
+      className="fixed top-0 left-0 w-64 h-full z-50 backdrop-blur-md bg-transparent"
       ref={ref}
     >
       <div className="px-5 py-5">
         <div className="flex items-center mb-6 px-2">
-          <span className="text-xl font-bold text-blue-700">Rafiki</span>
+          <span className="text-xl font-bold">Rafiki</span>
         </div>
         <ul className="space-y-2 text-[16px] font-medium">
           {menu.map((item) => {
@@ -121,12 +112,10 @@ export const MobileMenu = ({ handleShowMobileMenu }: HandleShowMobileMenu) => {
                     isActive ? "bg-gray-200" : "hover:bg-gray-100"
                   }`}
                 >
-                  <div
-                    className={`p-2 rounded-md ${item.color} flex items-center justify-center`}
-                  >
+                  <div className="p-2 rounded-md bg-black text-white flex items-center justify-center">
                     {item.icon}
                   </div>
-                  <span className="text-gray-800">{item.title}</span>
+                  <span className="text-black">{item.title}</span>
                 </div>
               </li>
             );

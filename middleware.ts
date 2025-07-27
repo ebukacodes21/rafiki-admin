@@ -68,6 +68,7 @@ export const config = {
     "/consultations",
     "/office-hours",
     "/matters",
+    "/docu-scan",
     "/settings",
   ],
 };

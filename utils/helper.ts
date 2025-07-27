@@ -21,12 +21,11 @@ export const fileUploader = async (url: string, formData: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response.data;  
+    return response.data;
   } catch (error) {
-    return error;  // Return the error to handle it in the frontend
+    return error; // Return the error to handle it in the frontend
   }
 };
-
 
 export const formatError = (err: any) => {
   const errObj = err.response?.data?.error;
@@ -64,7 +63,10 @@ export const generateTimeOptions = () => {
   return times;
 };
 
-export function debounce<T extends (...args: any[]) => any>(func: T, wait: number) {
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+) {
   let timeout: ReturnType<typeof setTimeout>;
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
@@ -75,7 +77,7 @@ export function debounce<T extends (...args: any[]) => any>(func: T, wait: numbe
 export function convertWeeklyHoursToPayload(weeklyHoursArray: WeeklyHour[]) {
   const result: Record<string, { open: string; close: string }[]> = {};
 
-   weeklyHoursArray.forEach(({ day, open, close, active }) => {
+  weeklyHoursArray.forEach(({ day, open, close, active }) => {
     const key = day.toUpperCase();
 
     if (active && open && close) {

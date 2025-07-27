@@ -16,22 +16,22 @@ const MainNav = ({
   className,
   ...props
 }: React.HtmlHTMLAttributes<HTMLElement>) => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   const pathName = usePathname();
-  const router = useRouter()
-  const dispatch = useAppDispatch()
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const logout = async () => {
-    setLoading(true)
-      try {
-        await apiCall("/api/logout", "GET");
-        dispatch(logOut());
-        toast.success("logged out")
-        router.replace(routes.LOGIN);
-      } catch (err) {
-        console.error("Logout error:", err);
-      }
-    };
+    setLoading(true);
+    try {
+      await apiCall("/api/logout", "GET");
+      dispatch(logOut());
+      toast.success("logged out");
+      router.replace(routes.LOGIN);
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  };
 
   const menu = [
     {
@@ -59,6 +59,11 @@ const MainNav = ({
       label: "Letterhead",
       active: pathName === routes.DOCUMENTS,
     },
+    {
+      href: routes.DOCU_SIGN,
+      label: "DocuScan",
+      active: pathName === routes.DOCU_SIGN,
+    },
     // {
     //   href: routes.LAW_FIRM,
     //   label: "Law Firm",
@@ -72,17 +77,20 @@ const MainNav = ({
   ];
 
   return (
-    <nav className={cn("hidden md:flex items-center space-x-4 lg:space-x-6", className)} {...props}>
-    <h1 className="text-2xl font-bold italic">Rafiki</h1>
+    <nav
+      className={cn(
+        "hidden md:flex items-center space-x-4 lg:space-x-6",
+        className
+      )}
+      {...props}
+    >
       {menu.map((item) => (
         <Link
           href={item.href}
           key={item.href}
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            item.active
-              ? "text-black dark:text-white"
-              : "text-muted-foreground"
+            item.active ? "text-black dark:text-white" : "text-muted-foreground"
           )}
         >
           {item.label}
@@ -93,8 +101,8 @@ const MainNav = ({
       </div>
       <div className="ml-auto flex items-center space-x-4">
         <Button onClick={logout} className="cursor-pointer">
-        {loading ? "logging out..." : "Logout"}
-        <ClipLoader loading={loading} color="fff" size={10}/>
+          {loading ? "logging out..." : "Logout"}
+          <ClipLoader loading={loading} color="fff" size={10} />
         </Button>
       </div>
     </nav>

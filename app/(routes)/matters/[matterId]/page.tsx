@@ -41,6 +41,7 @@ import { MatterSchema } from "@/schema";
 import { useAppSelector } from "@/redux/hooks/useSelectorHook";
 import { selectCurrentFirm } from "@/redux/features/firm";
 import { useRouter, useParams } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
 
 type FormData = z.infer<typeof MatterSchema>;
 
@@ -50,7 +51,7 @@ export default function AddNewMatterPage() {
   const firm = useAppSelector(selectCurrentFirm);
   const [tab, setTab] = useState<string>("overview");
   const [loading, setLoading] = useState<boolean>(false);
-  const [loaded, setLoaded] = useState<boolean>(false); 
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   const isEdit = params?.matterId && params.matterId !== "new";
 
@@ -72,6 +73,12 @@ export default function AddNewMatterPage() {
           : "",
       events: [],
       parties: [],
+      charge: {
+        type: "Flat",
+        amount: 0,
+        vat: 0,
+        discount: 0,
+      },
     },
   });
 
@@ -94,13 +101,18 @@ export default function AddNewMatterPage() {
         setValue("title", matter.title);
         setValue("description", matter.description);
         setValue("area", matter.area ?? "");
+
         setValue(
           "parties",
           matter.parties?.map((p) => ({
             name: p.name,
             role: p.role,
+            email: p.email || "",
+            phone: p.phone || "",
+            address: p.address || "",
           })) || []
         );
+
         setValue(
           "events",
           matter.events?.map((e) => ({
@@ -108,7 +120,17 @@ export default function AddNewMatterPage() {
             date: new Date(e.date).toISOString(),
           })) || []
         );
-        setLoaded(true); // prevent resetting on next render
+
+        if (matter.charge) {
+          setValue("charge", {
+            type: matter.charge.type,
+            amount: matter.charge.amount,
+            vat: matter.charge.vat,
+            discount: matter.charge.discount,
+          });
+        }
+
+        setLoaded(true);
       }
     }
   }, [loaded, isEdit, params.matterId, firm, setValue]);
@@ -122,6 +144,9 @@ export default function AddNewMatterPage() {
       parties: data.parties?.map((p) => ({
         name: p.name,
         role: p.role,
+        email: p.email,
+        address: p.address,
+        phone: p.phone,
       })),
       events: data.events?.map((e) => ({
         name: e.title,
@@ -131,19 +156,16 @@ export default function AddNewMatterPage() {
 
     let result;
     if (isEdit) {
-      // PATCH to update existing matter
       result = await apiCall(
-        `/api/matters/${params.matterId}`,
+        `/api/edit-matter?matterId=${params.matterId}`,
         "PATCH",
         transformed
       );
     } else {
-      // POST to create new matter
       result = await apiCall("/api/create-matter", "POST", transformed);
     }
 
     setLoading(false);
-
     if (result.name === "AxiosError") {
       toast.error(formatError(result));
       return;
@@ -161,7 +183,7 @@ export default function AddNewMatterPage() {
           <CardContent className="p-4">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <Tabs value={tab} onValueChange={setTab}>
-                <TabsList className="mb-4">
+                <TabsList className="mb-4 flex flex-wrap">
                   <TabsTrigger className="cursor-pointer" value="overview">
                     <EyeIcon className="w-5 h-5 mr-1 text-sky-500" />
                     Overview
@@ -177,6 +199,10 @@ export default function AddNewMatterPage() {
                   <TabsTrigger className="cursor-pointer" value="parties">
                     <UsersIcon className="w-5 h-5 mr-1 text-violet-500" />
                     Parties
+                  </TabsTrigger>
+                  <TabsTrigger className="cursor-pointer" value="bill">
+                    <UsersIcon className="w-5 h-5 mr-1 text-violet-500" />
+                    Bill of Charges
                   </TabsTrigger>
                 </TabsList>
 
@@ -332,73 +358,219 @@ export default function AddNewMatterPage() {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => appendParty({ name: "", role: "Client" })}
+                      onClick={() =>
+                        appendParty({
+                          name: "",
+                          role: "Client",
+                          email: "",
+                          phone: "",
+                          address: "",
+                        })
+                      }
                       className="cursor-pointer"
                     >
                       <PlusIcon className="w-4 h-4 mr-1" />
                       Add Party
                     </Button>
+
                     {partyFields.map((field, index) => (
-                      <div key={field.id} className="grid grid-cols-3 gap-2">
-                        <div className="space-y-2">
-                          <Label>Name:</Label>
-                          <Input
-                            {...register(`parties.${index}.name`)}
-                            placeholder="e.g. ABC Ltd"
-                          />
-                          {errors.parties?.[index]?.name && (
-                            <p className="text-sm text-red-500">
-                              {errors.parties[index]?.name?.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <div className="space-y-2">
-                            <Label>Role:</Label>
-                            <Select
-                              onValueChange={(val) =>
-                                setValue(`parties.${index}.role`, val, {
-                                  shouldValidate: true,
-                                })
-                              }
-                              value={watch(`parties.${index}.role`)}
+                      <Card key={field.id} className="border shadow-sm">
+                        <CardContent className="p-4 space-y-4">
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-medium text-lg">
+                              Party {index + 1}
+                            </h3>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => removeParty(index)}
+                              className="text-red-500"
+                              aria-label="Remove party"
                             >
-                              <SelectTrigger className="w-full cursor-pointer">
-                                <SelectValue placeholder="Select Role" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {[
-                                  "Client",
-                                  "Defendant",
-                                  "Opposing Counsel",
-                                  "Judge",
-                                  "magistrate",
-                                  "Umpire",
-                                ].map((role) => (
-                                  <SelectItem key={role} value={role}>
-                                    {role}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              <TrashIcon className="w-4 h-4 mr-1" />
+                              Remove
+                            </Button>
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => removeParty(index)}
-                            className="text-red-500 col-span-2 text-left cursor-pointer"
-                            aria-label="Remove party"
-                          >
-                            <TrashIcon className="w-4 h-4 mr-1" />
-                          </Button>
-                        </div>
-                      </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                              <Label>Name:</Label>
+                              <Input
+                                {...register(`parties.${index}.name`)}
+                                placeholder="e.g. ABC Ltd"
+                              />
+                              {errors.parties?.[index]?.name && (
+                                <p className="text-sm text-red-500">
+                                  {errors.parties[index]?.name?.message}
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label>Email:</Label>
+                              <Input
+                                {...register(`parties.${index}.email`)}
+                                placeholder="e.g. contact@abc.com"
+                              />
+                              {errors.parties?.[index]?.email && (
+                                <p className="text-sm text-red-500">
+                                  {errors.parties[index]?.email?.message}
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label>Phone:</Label>
+                              <Input
+                                {...register(`parties.${index}.phone`)}
+                                placeholder="e.g. 1234567890"
+                              />
+                              {errors.parties?.[index]?.phone && (
+                                <p className="text-sm text-red-500">
+                                  {errors.parties[index]?.phone?.message}
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="space-y-1">
+                              <Label>Role:</Label>
+                              <Select
+                                onValueChange={(val) =>
+                                  setValue(`parties.${index}.role`, val, {
+                                    shouldValidate: true,
+                                  })
+                                }
+                                value={watch(`parties.${index}.role`)}
+                              >
+                                <SelectTrigger className="w-full cursor-pointer">
+                                  <SelectValue placeholder="Select Role" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {[
+                                    "Client",
+                                    "Defendant",
+                                    "Opposing Counsel",
+                                    "Judge",
+                                    "Magistrate",
+                                    "Umpire",
+                                  ].map((role) => (
+                                    <SelectItem key={role} value={role}>
+                                      {role}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label>Address:</Label>
+                            <Textarea
+                              {...register(`parties.${index}.address`)}
+                              placeholder="e.g. 123 Main St, City, Country"
+                            />
+                            {errors.parties?.[index]?.address && (
+                              <p className="text-sm text-red-500">
+                                {errors.parties[index]?.address?.message}
+                              </p>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
                     ))}
                   </div>
                 </TabsContent>
+
+                <TabsContent value="bill">
+                  <Card className="border shadow-sm">
+                    <CardContent className="p-4 space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="space-y-1">
+                          <Label>Type:</Label>
+                          <Controller
+                            control={control}
+                            name={`charge.type`}
+                            render={({ field }) => (
+                              <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                              >
+                                <SelectTrigger className="w-full cursor-pointer">
+                                  <SelectValue placeholder="Select Type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Flat">
+                                    Flat Rate
+                                  </SelectItem>
+                                  <SelectItem value="Hourly">Hourly</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <Label>Amount:</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...register(`charge.amount`, {
+                              valueAsNumber: true,
+                            })}
+                            placeholder="e.g. 100"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <Label>VAT %:</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...register(`charge.vat`, { valueAsNumber: true })}
+                            placeholder="e.g. 15"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <Label>Discount %:</Label>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...register(`charge.discount`, {
+                              valueAsNumber: true,
+                            })}
+                            placeholder="e.g. 5"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Total */}
+                      <div className="pt-2">
+                        <p className="text-sm">
+                          Final Total:{" "}
+                          <span className="font-medium">
+                            {(() => {
+                              const amount = watch("charge.amount") || 0;
+                              const vat = watch("charge.vat") || 0;
+                              const discount = watch("charge.discount") || 0;
+                              const vatAmount = (amount * vat) / 100;
+                              const discountAmount = (amount * discount) / 100;
+                              const total = amount + vatAmount - discountAmount;
+                              return total.toFixed(2);
+                            })()}
+                          </span>
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
               </Tabs>
 
-              <Button type="submit" disabled={true}>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="cursor-pointer"
+              >
                 {loading
                   ? isEdit
                     ? "Updating..."

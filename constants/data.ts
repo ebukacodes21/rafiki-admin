@@ -80,6 +80,8 @@ export const areas = [
 
 export const COOKIE_NAME = "rafiki_admin"
 
+export const BATCH_SIZE = 10
+
 export const countryList = [
   {
     id: 1,

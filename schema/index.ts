@@ -122,7 +122,17 @@ export const MatterSchema = z.object({
       z.object({
         name: z.string().min(1, "Name is required"),
         role: z.string().min(1, "Role is required"),
+        email: z.string().min(1, "Email is required").email("invalid email address"),
+        phone: z.string().min(11, "Phone number is required"),
+        address: z.string().min(1, "Address is required"),
       })
     )
     .optional(),
+  charge: z.object({
+  type: z.enum(["Flat", "Hourly"]),
+  amount: z.number().positive("Amount must be positive"),
+  vat: z.number().min(0).max(100),
+  discount: z.number().min(0).max(100),
+})
+
 });

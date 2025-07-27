@@ -16,6 +16,7 @@ export const routes = {
   DASHBOARD: "/dashboard",
   CONSULTATIONS: "/consultations",
   OFFICER_HOURS: "/office-hours",
+  DOCU_SIGN: "/docu-scan",
   MATTERS: "/matters",
   DOCUMENTS: "/documents",
   CLIENTS: "/clients",

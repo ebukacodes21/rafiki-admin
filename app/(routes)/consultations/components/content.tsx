@@ -20,7 +20,7 @@ import { DateRange, OnSelectHandler } from "react-day-picker";
 const ConsultationsContent = () => {
   const firm = useAppSelector(selectCurrentFirm);
   const consultations = firm?.consultations ?? [];
-  const now = new Date();
+
   const [tab, setTab] = useState<"upcoming" | "past" | "range">("upcoming");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [tempRange, setTempRange] = useState<DateRange | undefined>(undefined);
@@ -41,6 +41,7 @@ const ConsultationsContent = () => {
       setAppliedRange(todayRange);
     }
   }, [tab]);
+
   const startOfDay = (date: Date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
   const endOfDay = (date: Date) =>
@@ -55,25 +56,32 @@ const ConsultationsContent = () => {
     );
 
   const filteredConsultations = useMemo(() => {
+    const now = new Date();
     if (tab === "upcoming") {
-      return consultations.filter((c) =>
+      const filtered = consultations.filter((c) =>
         isAfter(new Date(c.scheduledFor), now)
       );
+      console.log("Filtered upcoming consultations:", filtered);
+      return filtered;
     } else if (tab === "past") {
-      return consultations.filter((c) =>
+      const filtered = consultations.filter((c) =>
         isBefore(new Date(c.scheduledFor), now)
       );
+      console.log("Filtered past consultations:", filtered);
+      return filtered;
     } else if (tab === "range" && appliedRange?.from && appliedRange?.to) {
       const fromDate = startOfDay(appliedRange.from);
       const toDate = endOfDay(appliedRange.to);
-      return consultations.filter((c) => {
+      const filtered = consultations.filter((c) => {
         const date = new Date(c.scheduledFor);
         return date >= fromDate && date <= toDate;
       });
+      console.log("Filtered range consultations:", filtered);
+      return filtered;
     }
-    // for safety, no consultations when tab unknown
+    // safety fallback
     return [];
-  }, [consultations, tab, appliedRange, now]);
+  }, [consultations, tab, appliedRange]);
 
   const formatDateRange = (from?: Date, to?: Date) => {
     if (!from || !to) return "";
@@ -146,7 +154,9 @@ const ConsultationsContent = () => {
 
                 <PopoverContent className="w-auto p-6">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold">Scan by Date Range</h3>
+                    <h3 className="text-lg font-semibold">
+                      Scan by Date Range
+                    </h3>
                   </div>
 
                   <Calendar
@@ -196,10 +206,7 @@ const ConsultationsContent = () => {
               </span>
             )}
 
-            <DataTable
-              columns={columns}
-              data={filteredConsultations}
-            />
+            <DataTable columns={columns} data={filteredConsultations} />
           </TabsContent>
         </Tabs>
       </div>
