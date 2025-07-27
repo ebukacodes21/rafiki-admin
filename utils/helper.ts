@@ -89,4 +89,3 @@ export function convertWeeklyHoursToPayload(weeklyHoursArray: WeeklyHour[]) {
 
   return result;
 }
-
