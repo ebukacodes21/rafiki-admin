@@ -129,7 +129,7 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
     const result = await fileUploader("/api/upload", formData);
     setUploading(false);
     if (result?.name === "AxiosError") {
-      // toast.error(formatError(result));
+      toast.error(formatError(result));
       console.log(result);
       return;
     }
