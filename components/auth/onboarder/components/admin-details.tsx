@@ -129,9 +129,9 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
 
     const result = await fileUploader("/api/upload", formData);
     setUploading(false);
-
     if (result?.name === "AxiosError") {
       toast.error(formatError(result));
+      console.log(result)
       return;
     }
 
@@ -262,7 +262,7 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
                 Upload Document <span className="text-red-500">*</span>
               </Label>
               <FileUpload
-                title="Upload Practice Licence or Bar Certificate"
+                title=""
                 onChange={handleFileUpload}
                 isLoading={uploading}
                 disabled={isUploaded}

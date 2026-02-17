@@ -40,25 +40,30 @@ const MainNav = ({
       active: pathName === routes.DASHBOARD,
     },
     {
-      href: routes.CONSULTATIONS,
-      label: "Consultations",
-      active: pathName === routes.CONSULTATIONS,
+      href: routes.CHUNK,
+      label: "Chunk",
+      active: pathName === routes.CHUNK,
     },
-    {
-      href: routes.OFFICER_HOURS,
-      label: "Office Hours",
-      active: pathName === routes.OFFICER_HOURS,
-    },
-    {
-      href: routes.MATTERS,
-      label: "Matters",
-      active: pathName === routes.MATTERS,
-    },
-    {
-      href: routes.DOCUMENTS,
-      label: "Letterhead",
-      active: pathName === routes.DOCUMENTS,
-    },
+    // {
+    //   href: routes.CONSULTATIONS,
+    //   label: "Consultations",
+    //   active: pathName === routes.CONSULTATIONS,
+    // },
+    // {
+    //   href: routes.OFFICER_HOURS,
+    //   label: "Office Hours",
+    //   active: pathName === routes.OFFICER_HOURS,
+    // },
+    // {
+    //   href: routes.MATTERS,
+    //   label: "Matters",
+    //   active: pathName === routes.MATTERS,
+    // },
+    // {
+    //   href: routes.DOCUMENTS,
+    //   label: "Letterhead",
+    //   active: pathName === routes.DOCUMENTS,
+    // },
     // {
     //   href: routes.DOCU_SIGN,
     //   label: "DocuScan",

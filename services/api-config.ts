@@ -11,7 +11,7 @@ const apiConfig = {
     loginGoogle: `${admin_base_url}/admin/login-google`,
     forgot: `${admin_base_url}/admin/forgot`,
     reset: `${admin_base_url}/admin/reset`,
-    upload: `${admin_base_url}/admin/upload`,
+    upload: `${admin_base_url}/upload`,
     onboard: `${admin_base_url}/admin/onboard`,
     updateAccount: `${admin_base_url}/admin/update-account`,
     updatePassword: `${admin_base_url}/admin/update-password`,

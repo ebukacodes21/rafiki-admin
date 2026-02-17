@@ -11,6 +11,7 @@ export const routes = {
 
   ONBOARD: "/auth/onboard",
   ACCESS: "/auth/access",
+  CHUNK: "/chunk",
 
   HOME: "/",
   DASHBOARD: "/dashboard",

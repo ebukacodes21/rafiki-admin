@@ -64,6 +64,7 @@ export const config = {
     "/auth/access",
 
     "/dashboard",
+    "/chunk",
     "/documents",
     "/consultations",
     "/office-hours",
