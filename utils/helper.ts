@@ -23,6 +23,7 @@ export const fileUploader = async (url: string, formData: FormData) => {
     });
     return response.data;
   } catch (error) {
+    console.log(error)
     return error; // Return the error to handle it in the frontend
   }
 };

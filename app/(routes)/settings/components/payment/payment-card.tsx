@@ -62,12 +62,7 @@ const toggleEnable = async (checked: boolean) => {
   setEnabled(checked);
   setLoading(true);
 
-  const payload = {
-    ...form.getValues(),
-    enabled: checked,
-    firmId: firm?.id,
-  };
-
+  const payload = {...form.getValues(),enabled: checked,firmId: firm?.id};
   const result = await apiCall("/api/update-fee", "PUT", payload);
   setLoading(false);
   if (result.name === "AxiosError") {

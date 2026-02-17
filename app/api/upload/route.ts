@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(res.data);  
   } catch (error: any) {
+    console.log(error)
     return NextResponse.json({ message: error.response?.data || "File upload failed" }, { status: error.response?.status || 500 });
   }
 }

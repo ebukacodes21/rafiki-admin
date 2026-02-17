@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { AdminFormSchema } from "@/schema";
@@ -111,7 +111,6 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
     register,
     formState: { errors },
   } = form;
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>();
   const [currentStep, setCurrentStep] = useState(0);
   const [isUploaded, setIsUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -130,8 +129,8 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
     const result = await fileUploader("/api/upload", formData);
     setUploading(false);
     if (result?.name === "AxiosError") {
-      toast.error(formatError(result));
-      console.log(result)
+      // toast.error(formatError(result));
+      console.log(result);
       return;
     }
 
@@ -139,28 +138,6 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
     toast.success("Document uploaded successfully!");
     setIsUploaded(true);
   };
-
-  useEffect(() => {
-    const fetchCountry = async () => {
-      try {
-        const response = await fetch("https://ip-api.io/api/v1/ip");
-        const data = await response.json();
-        if (data.location.country) {
-          setSelectedCountry(data.location.country);
-        }
-      } catch (error) {
-        console.error("Error fetching country:", error);
-      }
-    };
-
-    fetchCountry();
-  }, []);
-
-  useEffect(() => {
-    if (selectedCountry) {
-      form.setValue("country", selectedCountry);
-    }
-  }, [selectedCountry, form]);
 
   const InputField = ({
     label,
@@ -218,17 +195,16 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
           <>
             <div className="space-y-1 col-span-2">
               <div className="flex items-center gap-1">
-                <GlobeAltIcon className="h-5 w-5 text-blue-600"/>
-              <Label className="text-sm font-medium">
-                Country <span className="text-red-500">*</span>
-              </Label>
+                <GlobeAltIcon className="h-5 w-5 text-blue-600" />
+                <Label className="text-sm font-medium">
+                  Country <span className="text-red-500">*</span>
+                </Label>
               </div>
               <Select
-                value={selectedCountry}
-                onValueChange={(value) => {
-                  setSelectedCountry(value);
-                  form.setValue("country", value, { shouldValidate: true });
-                }}
+                value={form.watch("country")}
+                onValueChange={(value) =>
+                  form.setValue("country", value, { shouldValidate: true })
+                }
               >
                 <SelectTrigger className="rounded-md border border-gray-300 px-4 py-2 bg-white cursor-pointer">
                   <SelectValue placeholder="Select country" />
@@ -250,6 +226,7 @@ const AdminDetailsStep: FC<AdminDetailsStepProps> = ({ form }) => {
                   ))}
                 </SelectContent>
               </Select>
+
               {errors.country && (
                 <p className="text-xs text-red-600">
                   {errors.country.message as string}
